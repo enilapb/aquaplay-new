@@ -382,8 +382,6 @@ joo.classLoader.prepare(
                 }
                 else if (General.Input.isKeyPressed(82)) {
                     Main.m_currTest = null;
-                } else if(General.Input.isKeyPressed(119)){
-                    Main.m_currTest.createAr();
                 } else if(General.Input.isKeyPressed(118)){
                     Main.m_currTest.destroyAr();
                 }
@@ -888,7 +886,32 @@ joo.classLoader.prepare(
             },
 
             // alert("criando ar");
-            "public function createAr", function () {
+            "public function createArLeft", function () {
+                for (var i = 0; i < 20; i++) {
+
+                    var bodyDef = new Box2D.Dynamics.b2BodyDef();
+                    bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
+                    var cd = new Box2D.Collision.Shapes.b2CircleShape((Math.random() * 15 + 5) / this.m_physScale);
+
+                    var fixtureDef = new Box2D.Dynamics.b2FixtureDef();
+                    fixtureDef.shape = cd;
+                    fixtureDef.friction = 0.3;
+                    fixtureDef.density = 0.5;
+                    fixtureDef.restitution = 0.1;
+
+                    bodyDef.position.Set((Math.random() * 320 + 10) / this.m_physScale, 350 / this.m_physScale);
+                    bodyDef.angle = Math.random() * Math.PI;
+                    var body = this.m_world.CreateBody(bodyDef);
+                    body.CreateFixture(fixtureDef);
+                    this.m_controller$2.AddBody(body);
+
+                    refBolhas[j] = body;
+                    j++;
+               }
+            },
+
+            // alert("criando ar");
+            "public function createArRight", function () {
                 for (var i = 0; i < 20; i++) {
 
                     var bodyDef = new Box2D.Dynamics.b2BodyDef();
