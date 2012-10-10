@@ -333,7 +333,7 @@ joo.classLoader.prepare(
 // class Main
 joo.classLoader.prepare(
     "package",
-    {SWF:{width:'640', height:'360', backgroundColor:'#292C2C', frameRate:'30'}},
+    {SWF:{width:'480', height:'800', backgroundColor:'#292C2C', frameRate:'30'}},
     "public class Main extends flash.display.MovieClip", 7, function ($$private) {
         var $$bound = joo.boundMethod;
         return[function () {
@@ -352,7 +352,7 @@ joo.classLoader.prepare(
                 var instructions_text_format = new flash.text.TextFormat("Arial", 16, 0xffffff, false, false, false);
                 instructions_text_format.align = flash.text.TextFormatAlign.RIGHT;
                 instructions_text.defaultTextFormat = instructions_text_format;
-                instructions_text.x = 140;
+                instructions_text.x = 20;
                 instructions_text.y = 4.5;
                 instructions_text.width = 495;
                 instructions_text.height = 61;
@@ -362,7 +362,7 @@ joo.classLoader.prepare(
                 var m_aboutTextFormat = new flash.text.TextFormat("Arial", 16, 0x00CCFF, true, false, false);
                 m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
                 Main.m_aboutText.defaultTextFormat = m_aboutTextFormat;
-                Main.m_aboutText.x = 334;
+                Main.m_aboutText.x = 134;
                 Main.m_aboutText.y = 71;
                 Main.m_aboutText.width = 300;
                 Main.m_aboutText.height = 30;
@@ -454,7 +454,7 @@ joo.classLoader.prepare(
                 this.m_world.SetWarmStarting(true);
                 var dbgDraw = new Box2D.Dynamics.b2DebugDraw();
                 dbgDraw.SetSprite(this.m_sprite);
-                dbgDraw.SetDrawScale(30.0);
+                dbgDraw.SetDrawScale(50.0);
                 dbgDraw.SetFillAlpha(0.3);
                 dbgDraw.SetLineThickness(1.0);
                 dbgDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit);
@@ -462,18 +462,26 @@ joo.classLoader.prepare(
                 var wall = new Box2D.Collision.Shapes.b2PolygonShape();
                 var wallBd = new Box2D.Dynamics.b2BodyDef();
                 var wallB;
+
+                //PAREDE VERTICAL LEFT
                 wallBd.position.Set(-95 / this.m_physScale, 360 / this.m_physScale / 2);
-                wall.SetAsBox(100 / this.m_physScale, 400 / this.m_physScale / 2);
+                wall.SetAsBox(100 / this.m_physScale, 800 / this.m_physScale / 2);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
-                wallBd.position.Set((640 + 95) / this.m_physScale, 360 / this.m_physScale / 2);
+
+                //PAREDE HORIZONTAL TOP
+                wallBd.position.Set((285 + 95) / this.m_physScale, 160 / this.m_physScale / 2);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
-                wallBd.position.Set(640 / this.m_physScale / 2, -95 / this.m_physScale);
-                wall.SetAsBox(680 / this.m_physScale / 2, 100 / this.m_physScale);
+
+                //PAREDE VERTICAL RIGHT
+                wallBd.position.Set(280 / this.m_physScale / 2, -95 / this.m_physScale);
+                wall.SetAsBox(480 / this.m_physScale / 2, 100 / this.m_physScale);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
-                wallBd.position.Set(640 / this.m_physScale / 2, (360 + 95) / this.m_physScale);
+
+                //PAREDE HORIZONTAL BOTTON
+                wallBd.position.Set(480 / this.m_physScale / 2, (480 + 95) / this.m_physScale);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
             },
@@ -809,7 +817,7 @@ joo.classLoader.prepare(
                 this.m_controller$2 = bc;
 
                 bc.normal.Set(0, -1);
-                bc.offset = -30 / this.m_physScale;
+                bc.offset = -100 / this.m_physScale;
                 bc.density = 2.0;
                 bc.linearDrag = 5;
                 bc.angularDrag = 2;
@@ -830,7 +838,7 @@ joo.classLoader.prepare(
                     fd.friction = 0.3;
                     fd.restitution = 0.1;
                     boxDef.SetAsBox((Math.random() * 5 + 10) / this.m_physScale, (Math.random() * 5 + 10) / this.m_physScale);
-                    bodyDef.position.Set((Math.random() * 400 + 120) / this.m_physScale, (Math.random() * 150 + 50) / this.m_physScale);
+                    bodyDef.position.Set((Math.random() * 400 + 0) / this.m_physScale, (Math.random() * 480 + 10) / this.m_physScale);
                     bodyDef.angle = Math.random() * Math.PI;
                     body = this.m_world.CreateBody(bodyDef);
                     body.CreateFixture(fd);
@@ -840,7 +848,7 @@ joo.classLoader.prepare(
                 /* Criando Cesta */
 
                 bd = new Box2D.Dynamics.b2BodyDef();
-                bd.position.Set(10.0, 8.0); //posição em relação ao body
+                bd.position.Set(4.5, 10.0); //posição em relação ao body
                 body = this.m_world.CreateBody(bd);
                 var polygon = Box2D.Collision.Shapes.b2PolygonShape.AsBox(1.5, 0.25);
                 polygon.SetAsOrientedBox(3.5 / this.m_physScale, 35.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(3.0 / this.m_physScale, -30.0 / this.m_physScale), 1.6);
@@ -873,21 +881,21 @@ joo.classLoader.prepare(
                 //Demarca a area referente a agua
                 this.m_sprite.graphics.lineStyle(1, 0x0000ff, 1);
                 this.m_sprite.graphics.moveTo(5, 30);
-                this.m_sprite.graphics.lineTo(635, 30);
+                this.m_sprite.graphics.lineTo(475, 30);
 
                 //Apenas para preencher a area referente a agua
                 this.m_sprite.graphics.lineStyle();
                 this.m_sprite.graphics.beginFill(0x0000ff, 0.1);
                 this.m_sprite.graphics.moveTo(5, 30);
-                this.m_sprite.graphics.lineTo(635, 30);
-                this.m_sprite.graphics.lineTo(635, 355);
-                this.m_sprite.graphics.lineTo(5, 355);
+                this.m_sprite.graphics.lineTo(475, 30);
+                this.m_sprite.graphics.lineTo(475, 800);
+                this.m_sprite.graphics.lineTo(5, 800);
                 this.m_sprite.graphics.endFill();
             },
 
             // alert("criando ar");
             "public function createArLeft", function () {
-                for (var i = 0; i < 20; i++) {
+                for (var i = 0; i < 10; i++) {
 
                     var bodyDef = new Box2D.Dynamics.b2BodyDef();
                     bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
@@ -899,7 +907,7 @@ joo.classLoader.prepare(
                     fixtureDef.density = 0.5;
                     fixtureDef.restitution = 0.1;
 
-                    bodyDef.position.Set((Math.random() * 320 + 10) / this.m_physScale, 350 / this.m_physScale);
+                    bodyDef.position.Set((Math.random() * 140 + 10) / this.m_physScale, 500 / this.m_physScale);
                     bodyDef.angle = Math.random() * Math.PI;
                     var body = this.m_world.CreateBody(bodyDef);
                     body.CreateFixture(fixtureDef);
@@ -912,7 +920,7 @@ joo.classLoader.prepare(
 
             // alert("criando ar");
             "public function createArRight", function () {
-                for (var i = 0; i < 20; i++) {
+                for (var i = 0; i < 10; i++) {
 
                     var bodyDef = new Box2D.Dynamics.b2BodyDef();
                     bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
@@ -924,7 +932,7 @@ joo.classLoader.prepare(
                     fixtureDef.density = 0.5;
                     fixtureDef.restitution = 0.1;
 
-                    bodyDef.position.Set((Math.random() * 320 + 10) / this.m_physScale, 350 / this.m_physScale);
+                    bodyDef.position.Set((Math.random() * 100 + 140) / this.m_physScale, 500 / this.m_physScale);
                     bodyDef.angle = Math.random() * Math.PI;
                     var body = this.m_world.CreateBody(bodyDef);
                     body.CreateFixture(fixtureDef);
