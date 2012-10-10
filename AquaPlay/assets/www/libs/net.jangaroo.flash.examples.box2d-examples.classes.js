@@ -1,5 +1,6 @@
 var refBolhas;
 var j = 0;
+var tempo;
 // class CanvasTest
 joo.classLoader.prepare("package",
     "public class CanvasTest", 1, function ($$private) {
@@ -383,7 +384,8 @@ joo.classLoader.prepare(
                 else if (General.Input.isKeyPressed(82)) {
                     Main.m_currTest = null;
                 } else if(General.Input.isKeyPressed(118)){
-                    Main.m_currTest.destroyAr();
+                	var now = Math.round((new Date()).getTime() / 1000);
+                    Main.m_currTest.destroyAr(now);
                 }
 
 
@@ -422,6 +424,11 @@ joo.classLoader.prepare(
                 General.Input.update();
                 Main.m_fpsCounter.update();
                 General.FRateLimiter.limitFrame(30);
+                /*
+                 * chama o apagar o ar
+                 */
+                var now = Math.round((new Date()).getTime() / 1000);
+                Main.m_currTest.destroyAr(now);
             },
             "static public var", {m_fpsCounter:function () {
                 return(new General.FpsCounter());
@@ -895,7 +902,9 @@ joo.classLoader.prepare(
 
             // alert("criando ar");
             "public function createArLeft", function () {
-                for (var i = 0; i < 10; i++) {
+            	tempo = Math.round((new Date()).getTime() / 1000);
+            	//alert(tempo);
+                for (var i = 0; i < 20; i++) {
 
                     var bodyDef = new Box2D.Dynamics.b2BodyDef();
                     bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
@@ -914,13 +923,16 @@ joo.classLoader.prepare(
                     this.m_controller$2.AddBody(body);
 
                     refBolhas[j] = body;
+                    refBolhas[j][j] = tempo;                    
                     j++;
                }
             },
 
             // alert("criando ar");
             "public function createArRight", function () {
-                for (var i = 0; i < 10; i++) {
+            	tempo = Math.round((new Date()).getTime() / 1000);
+            	//alert(tempo);
+                for (var i = 0; i < 20; i++) {
 
                     var bodyDef = new Box2D.Dynamics.b2BodyDef();
                     bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
@@ -937,20 +949,26 @@ joo.classLoader.prepare(
                     var body = this.m_world.CreateBody(bodyDef);
                     body.CreateFixture(fixtureDef);
                     this.m_controller$2.AddBody(body);
-
+                    
                     refBolhas[j] = body;
+                    refBolhas[j][j] = tempo;
+                   
                     j++;
                }
             },
 
             //Destroy Ar
-            "public function destroyAr", function () {
+            "public function destroyAr", function (now) { 
+            	
                 if(refBolhas.length > 0){
+                	
                     for (var i = 0; i < refBolhas.length; i++) {
                      var item = refBolhas[i];
-                        if(item != null){
+               
+                        if(item != null && (refBolhas[i][i] <= (now - 8))){
                             this.m_world.DestroyBody(item);
                             refBolhas[i] = null;
+                            refBolhas[i][i] = null;
                         }
                     }
                 }
