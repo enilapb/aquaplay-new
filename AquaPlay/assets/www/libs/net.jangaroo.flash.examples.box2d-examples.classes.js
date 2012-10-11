@@ -1,6 +1,10 @@
 var refBolhas;
 var j = 0;
 var tempo;
+var tempoJogo;
+var TEMPO_MAXIMO_JOGO = 10;
+var TEMPO_ESTOURA_BOLHA = 6;
+var NUMBER_TELA = 0;
 // class CanvasTest
 joo.classLoader.prepare("package",
     "public class CanvasTest", 1, function ($$private) {
@@ -409,16 +413,22 @@ joo.classLoader.prepare(
 
                 var tests = [
                     TestBed.TestBuoyancy,
-                    null
+                    TestBed.TestBridge,
+					null
                 ];
                 tests.length -= 1;
                 var testCount = tests.length;
                 this.m_currId = (this.m_currId + testCount) % testCount;
+				
+				//alert(this.m_currId);
+				
                 if (!Main.m_currTest) {
-                    switch (this.m_currId) {
+                    /*switch (this.m_currId) {
                         default:
                             Main.m_currTest = new tests[this.m_currId]();
-                    }
+                    }*/
+					Main.m_currTest = new tests[NUMBER_TELA]();
+					tempoJogo = Math.round((new Date()).getTime() / 1000);
                 }
                 Main.m_currTest.Update();
                 General.Input.update();
@@ -429,6 +439,18 @@ joo.classLoader.prepare(
                  */
                 var now = Math.round((new Date()).getTime() / 1000);
                 Main.m_currTest.destroyAr(now);
+				
+				/*
+				* Método de verificar tempo do jogo, para determinar quando acabou
+				*/
+				if (tempoJogo <= (now - TEMPO_MAXIMO_JOGO)) {	
+					Main.m_currTest = null;
+					/*
+					* coloca a tela de acabou o jogo
+					*/
+					NUMBER_TELA = 1;
+					alert("acabou o jogo, tempo acabou");
+				}
             },
             "static public var", {m_fpsCounter:function () {
                 return(new General.FpsCounter());
@@ -965,7 +987,7 @@ joo.classLoader.prepare(
                     for (var i = 0; i < refBolhas.length; i++) {
                      var item = refBolhas[i];
                
-                        if(item != null && (refBolhas[i][i] <= (now - 8))){
+                        if(item != null && (refBolhas[i][i] <= (now - TEMPO_ESTOURA_BOLHA))){
                             this.m_world.DestroyBody(item);
                             refBolhas[i] = null;
                             refBolhas[i][i] = null;
