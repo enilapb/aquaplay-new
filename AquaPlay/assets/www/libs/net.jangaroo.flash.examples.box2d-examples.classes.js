@@ -5,6 +5,7 @@ var tempoJogo;
 var TEMPO_MAXIMO_JOGO = 10;
 var TEMPO_ESTOURA_BOLHA = 6;
 var NUMBER_TELA = 0;
+var arrayCaixinhas = new Array();
 // class CanvasTest
 joo.classLoader.prepare("package",
     "public class CanvasTest", 1, function ($$private) {
@@ -440,6 +441,10 @@ joo.classLoader.prepare(
                 var now = Math.round((new Date()).getTime() / 1000);
                 Main.m_currTest.destroyAr(now);
 				
+				var element = arrayCaixinhas[0];
+				alert("y " + element.GetPosition().y);
+				alert("x " + element.GetPosition().x);
+				
 				/*
 				* Método de verificar tempo do jogo, para determinar quando acabou
 				*/
@@ -872,6 +877,11 @@ joo.classLoader.prepare(
                     body = this.m_world.CreateBody(bodyDef);
                     body.CreateFixture(fd);
                     this.m_bodies$2.push(body);
+					
+					/*
+					* array com as referências para as caixinhas
+					*/
+					arrayCaixinhas[i] = body;
                 }
 
                 /* Criando Cesta */
@@ -891,7 +901,7 @@ joo.classLoader.prepare(
 
                 body.CreateFixture2(sd_left, 1.0);
                 body.CreateFixture2(sd_right, 1.0);
-
+				
                 this.m_bodies$2.push(body);
 
                 for (var $1 in this.m_bodies$2) {
