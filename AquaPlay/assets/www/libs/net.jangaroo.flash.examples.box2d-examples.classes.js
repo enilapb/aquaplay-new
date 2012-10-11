@@ -439,11 +439,12 @@ joo.classLoader.prepare(
                  * chama o apagar o ar
                  */
                 var now = Math.round((new Date()).getTime() / 1000);
-                Main.m_currTest.destroyAr(now);
+                Main.m_currTest.destroyAr(now);		
 				
-				var element = arrayCaixinhas[0];
-				alert("y " + element.GetPosition().y);
-				alert("x " + element.GetPosition().x);
+				/*
+				* verifica se o usuário ganhou o jogo
+				*/
+				verificaVitoria();
 				
 				/*
 				* Método de verificar tempo do jogo, para determinar quando acabou
@@ -990,13 +991,10 @@ joo.classLoader.prepare(
             },
 
             //Destroy Ar
-            "public function destroyAr", function (now) { 
-            	
-                if(refBolhas.length > 0){
-                	
+            "public function destroyAr", function (now) {             	
+                if(refBolhas.length > 0){                	
                     for (var i = 0; i < refBolhas.length; i++) {
-                     var item = refBolhas[i];
-               
+                     var item = refBolhas[i];               
                         if(item != null && (refBolhas[i][i] <= (now - TEMPO_ESTOURA_BOLHA))){
                             this.m_world.DestroyBody(item);
                             refBolhas[i] = null;
@@ -1953,3 +1951,14 @@ joo.classLoader.prepare(
         ];
     }, [], ["TestBed.Test", "Main", "Box2D.Common.Math.b2Vec2", "Box2D.Collision.Shapes.b2CircleShape", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Math", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Box2D.Common.Math.b2Math", "Box2D.Dynamics.Joints.b2RevoluteJointDef", "Box2D.Dynamics.Joints.b2RevoluteJoint", "Box2D.Dynamics.Joints.b2DistanceJointDef", "General.Input"], "0.8.0", "0.8.1"
 );
+
+function verificaVitoria() {
+	
+	for (h = 0; h < arrayCaixinhas.leght; h++) {
+	
+		var element = arrayCaixinhas[h];
+		
+		var y = element.GetPosition().y;
+		var x = element.GetPosition().x;
+	}
+}
