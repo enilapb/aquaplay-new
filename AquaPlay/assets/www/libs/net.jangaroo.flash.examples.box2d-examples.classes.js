@@ -5,9 +5,11 @@ var tempoJogo;
 var TEMPO_MAXIMO_JOGO = 200;
 var TEMPO_ESTOURA_BOLHA = 6;
 var NUMBER_TELA = 0;
-var QUANT_CAIXAS = 5;
+var QUANT_CAIXAS = 3;
 var arrayCaixinhas = new Array();
 var my_m_physScale;
+var posArray = 0;
+var DentrCaixa = new Array();
 // class CanvasTest
 joo.classLoader.prepare("package",
     "public class CanvasTest", 1, function ($$private) {
@@ -1974,8 +1976,25 @@ function verificaVitoria(m_physScale) {
 		var x = element.GetPosition().x;
 		
 		if ((y > y1 && y < y2) && (x > x1 && x < x3)) {
+			quantCaixa = 0;
+			for( i = 0; i < DentrCaixa.length; i++) {
+				if(DentrCaixa[i] == element) {
+					quantCaixa++;
+				}
+			}
 			
-			alert("entrou na caixa");
+			/*
+			* se não estiver no array coloca para saber quando ganhou
+			*/
+			if (quantCaixa == 0) {
+				DentrCaixa[posArray] = element;
+				posArray++;
+			}
+		}
+		
+		if(DentrCaixa.length == QUANT_CAIXAS) {
+			alert("vc ganhou");
+			break;
 		}
 	}
 }
