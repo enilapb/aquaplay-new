@@ -448,7 +448,10 @@ joo.classLoader.prepare(
 				/*
 				* verifica se o usuário ganhou o jogo
 				*/
-				verificaVitoria(my_m_physScale);
+				if(verificaVitoria()) {
+					//faz o que se deve fazer quando ganha o jogo
+					alert("vc ganhou");
+				} 
 				
 				/*
 				* Método de verificar tempo do jogo, para determinar quando acabou
@@ -1957,7 +1960,7 @@ joo.classLoader.prepare(
     }, [], ["TestBed.Test", "Main", "Box2D.Common.Math.b2Vec2", "Box2D.Collision.Shapes.b2CircleShape", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Math", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Box2D.Common.Math.b2Math", "Box2D.Dynamics.Joints.b2RevoluteJointDef", "Box2D.Dynamics.Joints.b2RevoluteJoint", "Box2D.Dynamics.Joints.b2DistanceJointDef", "General.Input"], "0.8.0", "0.8.1"
 );
 
-function verificaVitoria(m_physScale) {
+function verificaVitoria() {
 	var quantCaixa = 0;
 	var x1 = 3.2;
 	var y1 = 6;
@@ -1992,9 +1995,11 @@ function verificaVitoria(m_physScale) {
 			}
 		}
 		
+		/*
+		* Verifica se todas as caixas estão dentro, da caixa maior
+		*/
 		if(DentrCaixa.length == QUANT_CAIXAS) {
-			alert("vc ganhou");
-			break;
+			return true;
 		}
 	}
 }
