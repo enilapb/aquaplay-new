@@ -10,6 +10,7 @@ var arrayCaixinhas = new Array();
 var my_m_physScale;
 var posArray = 0;
 var DentrCaixa = new Array();
+var tempoFinalPartida = 0;
 // class CanvasTest
 joo.classLoader.prepare("package",
     "public class CanvasTest", 1, function ($$private) {
@@ -450,7 +451,8 @@ joo.classLoader.prepare(
 				*/
 				if(verificaVitoria()) {
 					//faz o que se deve fazer quando ganha o jogo
-					alert("vc ganhou");
+					tempoFinalPartida = (now - tempoJogo);
+					alert("vc ganhou, seu time foi: " + tempoFinalPartida);
 				} 
 				
 				/*
@@ -1978,6 +1980,9 @@ function verificaVitoria() {
 		var y = element.GetPosition().y;
 		var x = element.GetPosition().x;
 		
+		/*
+		* verifica se a caixa pequena entrou na grande
+		*/
 		if ((y > y1 && y < y2) && (x > x1 && x < x3)) {
 			quantCaixa = 0;
 			for( i = 0; i < DentrCaixa.length; i++) {
