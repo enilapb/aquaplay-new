@@ -344,7 +344,7 @@ joo.classLoader.prepare(
 // class Main
 joo.classLoader.prepare(
     "package",
-    {SWF:{width:'355', height:'498', backgroundColor:'#292C2C', frameRate:'50'}},
+    {SWF:{width:'480', height:'800', backgroundColor:'#292C2C', frameRate:'30'}},
     "public class Main extends flash.display.MovieClip", 7, function ($$private) {
         var $$bound = joo.boundMethod;
         return[function () {
@@ -373,7 +373,7 @@ joo.classLoader.prepare(
                 var m_aboutTextFormat = new flash.text.TextFormat("Arial", 16, 0x00CCFF, true, false, false);
                 m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
                 Main.m_aboutText.defaultTextFormat = m_aboutTextFormat;
-                Main.m_aboutText.x = 34;
+                Main.m_aboutText.x = 134;
                 Main.m_aboutText.y = 71;
                 Main.m_aboutText.width = 300;
                 Main.m_aboutText.height = 30;
@@ -464,7 +464,7 @@ joo.classLoader.prepare(
 					* coloca a tela de acabou o jogo
 					*/
 					NUMBER_TELA = 1;
-					//alert("acabou o jogo, tempo acabou");
+					alert("acabou o jogo, tempo acabou");
 				}
             },
             "static public var", {m_fpsCounter:function () {
@@ -509,23 +509,23 @@ joo.classLoader.prepare(
 
                 //PAREDE VERTICAL LEFT
                 wallBd.position.Set(-95 / this.m_physScale, 360 / this.m_physScale / 2);
-                wall.SetAsBox(100 / this.m_physScale, 360 / this.m_physScale / 2);
-                wallB = this.m_world.CreateBody(wallBd);
-                wallB.CreateFixture2(wall, 0.0);
-
-                //PAREDE VERTICAL RIGHT
-                wallBd.position.Set((213 + 95) / this.m_physScale, 360 / this.m_physScale / 2);
+                wall.SetAsBox(100 / this.m_physScale, 800 / this.m_physScale / 2);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
 
                 //PAREDE HORIZONTAL TOP
+                wallBd.position.Set((285 + 95) / this.m_physScale, 160 / this.m_physScale / 2);
+                wallB = this.m_world.CreateBody(wallBd);
+                wallB.CreateFixture2(wall, 0.0);
+
+                //PAREDE VERTICAL RIGHT
                 wallBd.position.Set(280 / this.m_physScale / 2, -95 / this.m_physScale);
-                wall.SetAsBox(280 / this.m_physScale / 2, 100 / this.m_physScale);
+                wall.SetAsBox(480 / this.m_physScale / 2, 100 / this.m_physScale);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
 
                 //PAREDE HORIZONTAL BOTTON
-                wallBd.position.Set(280 / this.m_physScale / 2, (300 + 95) / this.m_physScale);
+                wallBd.position.Set(480 / this.m_physScale / 2, (480 + 95) / this.m_physScale);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
             },
@@ -863,7 +863,7 @@ joo.classLoader.prepare(
 				my_m_physScale = this.m_physScale;
 				
                 bc.normal.Set(0, -1);
-                bc.offset = -50 / this.m_physScale;
+                bc.offset = -100 / this.m_physScale;
                 bc.density = 2.0;
                 bc.linearDrag = 5;
                 bc.angularDrag = 2;
@@ -884,7 +884,7 @@ joo.classLoader.prepare(
                     fd.friction = 0.3;
                     fd.restitution = 0.1;
                     boxDef.SetAsBox((Math.random() * 5 + 10) / this.m_physScale, (Math.random() * 5 + 10) / this.m_physScale);
-                    bodyDef.position.Set((Math.random() * 200 + 0) / this.m_physScale, (Math.random() * 280 + 10) / this.m_physScale);
+                    bodyDef.position.Set((Math.random() * 400 + 0) / this.m_physScale, (Math.random() * 480 + 10) / this.m_physScale);
                     bodyDef.angle = Math.random() * Math.PI;
                     body = this.m_world.CreateBody(bodyDef);
                     body.CreateFixture(fd);
@@ -899,18 +899,18 @@ joo.classLoader.prepare(
                 /* Criando Cesta */
 
                 bd = new Box2D.Dynamics.b2BodyDef();
-                bd.position.Set(2.5, 6.0); //posição em relação ao body
+                bd.position.Set(4.5, 10.0); //posição em relação ao body
                 body = this.m_world.CreateBody(bd);
                 var polygon = Box2D.Collision.Shapes.b2PolygonShape.AsBox(1.5, 0.25);
-                polygon.SetAsOrientedBox(3.0 / this.m_physScale, 30.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(2.9 / this.m_physScale, -35.0 / this.m_physScale), 1.58);
+                polygon.SetAsOrientedBox(3.5 / this.m_physScale, 35.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(3.0 / this.m_physScale, -30.0 / this.m_physScale), 1.6);
                 this.m_platform = body.CreateFixture2(polygon, 0.0);
 
                 var sd_left = new Box2D.Collision.Shapes.b2PolygonShape();
-                sd_left.SetAsOrientedBox(2.0 / this.m_physScale, 30.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(-33.5 / this.m_physScale, -70.5 / this.m_physScale), -0.2);
+                sd_left.SetAsOrientedBox(2.0 / this.m_physScale, 40.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(-43.5 / this.m_physScale, -70.5 / this.m_physScale), -0.2);
 
                 var sd_right = new Box2D.Collision.Shapes.b2PolygonShape();
 										    //espessura             //tamanho																							//angulo
-                sd_right.SetAsOrientedBox(2.0 / this.m_physScale, 30.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(33.5 / this.m_physScale, -70.5 / this.m_physScale), 0.2);
+                sd_right.SetAsOrientedBox(2.0 / this.m_physScale, 40.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(43.5 / this.m_physScale, -70.5 / this.m_physScale), 0.2);
 
                 body.CreateFixture2(sd_left, 1.0);
                 body.CreateFixture2(sd_right, 1.0);
@@ -933,15 +933,15 @@ joo.classLoader.prepare(
                 //Demarca a area referente a agua
                 this.m_sprite.graphics.lineStyle(1, 0x0000ff, 1);
                 this.m_sprite.graphics.moveTo(5, 30);
-                this.m_sprite.graphics.lineTo(350, 30);
+                this.m_sprite.graphics.lineTo(475, 30);
 
                 //Apenas para preencher a area referente a agua
                 this.m_sprite.graphics.lineStyle();
                 this.m_sprite.graphics.beginFill(0x0000ff, 0.1);
                 this.m_sprite.graphics.moveTo(5, 30);
-                this.m_sprite.graphics.lineTo(350, 30);
-                this.m_sprite.graphics.lineTo(350, 500);
-                this.m_sprite.graphics.lineTo(5, 500);
+                this.m_sprite.graphics.lineTo(475, 30);
+                this.m_sprite.graphics.lineTo(475, 800);
+                this.m_sprite.graphics.lineTo(5, 800);
                 this.m_sprite.graphics.endFill();
             },
 
@@ -952,7 +952,7 @@ joo.classLoader.prepare(
 
                     var bodyDef = new Box2D.Dynamics.b2BodyDef();
                     bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
-                    var cd = new Box2D.Collision.Shapes.b2CircleShape((Math.random() * 10 + 5) / this.m_physScale);
+                    var cd = new Box2D.Collision.Shapes.b2CircleShape((Math.random() * 15 + 5) / this.m_physScale);
 
                     var fixtureDef = new Box2D.Dynamics.b2FixtureDef();
                     fixtureDef.shape = cd;
@@ -960,7 +960,7 @@ joo.classLoader.prepare(
                     fixtureDef.density = 0.5;
                     fixtureDef.restitution = 0.1;
 
-                    bodyDef.position.Set((Math.random() * 40 + 10) / this.m_physScale, 500 / this.m_physScale);
+                    bodyDef.position.Set((Math.random() * 140 + 10) / this.m_physScale, 500 / this.m_physScale);
                     bodyDef.angle = Math.random() * Math.PI;
                     var body = this.m_world.CreateBody(bodyDef);
                     body.CreateFixture(fixtureDef);
@@ -1008,7 +1008,7 @@ joo.classLoader.prepare(
                         if(item != null && refBolhas[i][i] != null && (refBolhas[i][i] <= (now - TEMPO_ESTOURA_BOLHA))){
                             this.m_world.DestroyBody(item);
                             refBolhas[i] = null;
-                            refBolhas[i][i] = null;
+                            //refBolhas[i][i] = null;
                         }
                     }
                 }
@@ -1991,7 +1991,6 @@ function verificaVitoria() {
 				}
 			}
 			
-			//alert("entrou na caixa");
 			/*
 			* se não estiver no array coloca para saber quando ganhou
 			*/
