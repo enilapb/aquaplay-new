@@ -2,10 +2,12 @@ var refBolhas;
 var j = 0;
 var tempo;
 var tempoJogo;
-var TEMPO_MAXIMO_JOGO = 10;
+var TEMPO_MAXIMO_JOGO = 200;
 var TEMPO_ESTOURA_BOLHA = 6;
 var NUMBER_TELA = 0;
+var QUANT_CAIXAS = 5;
 var arrayCaixinhas = new Array();
+var my_m_physScale;
 // class CanvasTest
 joo.classLoader.prepare("package",
     "public class CanvasTest", 1, function ($$private) {
@@ -444,7 +446,7 @@ joo.classLoader.prepare(
 				/*
 				* verifica se o usuário ganhou o jogo
 				*/
-				verificaVitoria();
+				verificaVitoria(my_m_physScale);
 				
 				/*
 				* Método de verificar tempo do jogo, para determinar quando acabou
@@ -850,7 +852,9 @@ joo.classLoader.prepare(
                 refBolhas =new Array();
                 var bc = new Box2D.Dynamics.Controllers.b2BuoyancyController();
                 this.m_controller$2 = bc;
-
+				
+				my_m_physScale = this.m_physScale;
+				
                 bc.normal.Set(0, -1);
                 bc.offset = -100 / this.m_physScale;
                 bc.density = 2.0;
@@ -863,7 +867,7 @@ joo.classLoader.prepare(
                 var fd;
 
                 //criando quadrados
-                for (i = 0; i < 5; i++) {
+                for (i = 0; i < QUANT_CAIXAS; i++) {
                     var bodyDef = new Box2D.Dynamics.b2BodyDef();
                     bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
                     var boxDef = new Box2D.Collision.Shapes.b2PolygonShape();
@@ -898,6 +902,7 @@ joo.classLoader.prepare(
                 sd_left.SetAsOrientedBox(2.0 / this.m_physScale, 40.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(-43.5 / this.m_physScale, -70.5 / this.m_physScale), -0.2);
 
                 var sd_right = new Box2D.Collision.Shapes.b2PolygonShape();
+										    //espessura             //tamanho																							//angulo
                 sd_right.SetAsOrientedBox(2.0 / this.m_physScale, 40.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(43.5 / this.m_physScale, -70.5 / this.m_physScale), 0.2);
 
                 body.CreateFixture2(sd_left, 1.0);
@@ -936,7 +941,6 @@ joo.classLoader.prepare(
             // alert("criando ar");
             "public function createArLeft", function () {
             	tempo = Math.round((new Date()).getTime() / 1000);
-            	//alert(tempo);
                 for (var i = 0; i < 20; i++) {
 
                     var bodyDef = new Box2D.Dynamics.b2BodyDef();
@@ -964,7 +968,6 @@ joo.classLoader.prepare(
             // alert("criando ar");
             "public function createArRight", function () {
             	tempo = Math.round((new Date()).getTime() / 1000);
-            	//alert(tempo);
                 for (var i = 0; i < 20; i++) {
 
                     var bodyDef = new Box2D.Dynamics.b2BodyDef();
@@ -1952,13 +1955,27 @@ joo.classLoader.prepare(
     }, [], ["TestBed.Test", "Main", "Box2D.Common.Math.b2Vec2", "Box2D.Collision.Shapes.b2CircleShape", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Math", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Box2D.Common.Math.b2Math", "Box2D.Dynamics.Joints.b2RevoluteJointDef", "Box2D.Dynamics.Joints.b2RevoluteJoint", "Box2D.Dynamics.Joints.b2DistanceJointDef", "General.Input"], "0.8.0", "0.8.1"
 );
 
-function verificaVitoria() {
+function verificaVitoria(m_physScale) {
+	var quantCaixa = 0;
+	var x1 = 3.2;
+	var y1 = 6;
 	
-	for (h = 0; h < arrayCaixinhas.leght; h++) {
+	var x2 = 4.5
+	var y2 = 7.6;
+	
+	var x3 = 6;
+	var y3 = 6;
+	
+	for (h = 0; h < arrayCaixinhas.length; h++) {
 	
 		var element = arrayCaixinhas[h];
 		
 		var y = element.GetPosition().y;
 		var x = element.GetPosition().x;
+		
+		if ((y > y1 && y < y2) && (x > x1 && x < x3)) {
+			
+			alert("entrou na caixa");
+		}
 	}
 }
