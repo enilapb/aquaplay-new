@@ -1005,7 +1005,7 @@ joo.classLoader.prepare(
                 if(refBolhas.length > 0){                	
                     for (var i = 0; i < refBolhas.length; i++) {
                      var item = refBolhas[i];               
-                        if(item != null && (refBolhas[i][i] <= (now - TEMPO_ESTOURA_BOLHA))){
+                        if(item != null && refBolhas[i][i] != null && (refBolhas[i][i] <= (now - TEMPO_ESTOURA_BOLHA))){
                             this.m_world.DestroyBody(item);
                             refBolhas[i] = null;
                             refBolhas[i][i] = null;
