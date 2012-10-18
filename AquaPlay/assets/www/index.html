@@ -1,5 +1,4 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0//EN">
-<!-- saved from url=(0051)http://www.jangaroo.net/files/examples/flash/box2d/ -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Aquaplay Mobile</title>
   <style type="text/css">
@@ -21,12 +20,8 @@
 <body>
 
 <div id="stage" style="position: relative; overflow: hidden; margin: 0px; padding: 0px;
-width: 480px; height: 800px; background-color: rgb(41, 44, 44); " tabindex="0">
-
-
-            <canvas width="480" height="800" style="position: absolute; "></canvas>
-
-
+width: 100%; height: 100%; background-color: rgb(41, 44, 44); " tabindex="0">
+	<canvas width="100%" height="100%" style="position: absolute; "></canvas>
 </div>
 
 <script type="text/javascript" src="./libs/net.jangaroo.jangaroo-runtime.classes.js"></script>
@@ -40,8 +35,9 @@ width: 480px; height: 800px; background-color: rgb(41, 44, 44); " tabindex="0">
     "stage",
     "Main");
 </script>
-<div style="width: 480px">
-	<button name="esquerdo" type="button" style="width: 100px; height: 40px; float: left;" onclick="Main.m_currTest.createArLeft()"> Botão Esquerdo </button>
-	<button name="direito" type="button" style="width: 100px; height: 40px; float: right;" onclick="Main.m_currTest.createArRight()"> Botão Direito </button>
+<div style="width: 100%">
+	<button name="esquerdo" type="button" style="width: 50%; height: 70px; float: left;" onclick="Main.m_currTest.createArLeft()"> Botão Esquerdo </button>
+	<button name="direito" type="button" style="width: 50%; height: 70px; float: right;" onclick="Main.m_currTest.createArRight()"> Botão Direito </button>
 </div>
-</body></html>
+</body>
+</html>
