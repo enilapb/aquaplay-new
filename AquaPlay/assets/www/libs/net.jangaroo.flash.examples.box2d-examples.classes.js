@@ -11,6 +11,7 @@ var my_m_physScale;
 var posArray = 0;
 var DentrCaixa = new Array();
 var tempoFinalPartida = 0;
+var db;
 // class CanvasTest
 joo.classLoader.prepare("package",
     "public class CanvasTest", 1, function ($$private) {
@@ -380,6 +381,26 @@ joo.classLoader.prepare(
                 this.addChild(Main.m_aboutText);
                 instructions_text.mouseEnabled = false;
                 Main.m_aboutText.mouseEnabled = false;
+                
+				//cria o banco
+				setupDB();
+				
+				if(!db) {
+					alert("not ok db");
+				}
+				
+				var user = "Aline";
+				var time = "100";
+				
+				db.transaction(function (tx) {			
+					
+					sql2 = "insert into ranking (user, time) values (?, ?)";				
+							
+					tx.executeSql(sql2, [user, time]);
+
+				} , err, finalli);
+			
+				consultaBanco();
             },
             "public function update", function (e) {
                 Main.m_sprite.graphics.clear();
@@ -2008,3 +2029,68 @@ function verificaVitoria() {
 		}
 	}
 }
+
+function setupDB() {
+	db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
+
+	if (db) {
+		console.log("passei");
+		db.transaction(exec, err, finalli);
+	}
+}
+
+function exec(tx) {
+
+	console.log("transacao rolando");
+
+	sql = "create table if not exists ranking (id integer Primary Key autoincrement, user varchar(100), time varchar(100))"
+}
+
+function consultaBanco() {
+
+	/*
+	 * pega a variavel global do banco
+	 */
+	if (db) {
+
+		db.transaction(function(tx) {
+
+			var sql = "select * from ranking";
+
+			tx.executeSql(sql, [], function(tx, resultado) {
+
+				for (i = 0; i < resultado.rows.length; i++) {
+					
+					alert("User: " + resultado.rows.item(i).user + " Time: "
+							+ resultado.rows.item(i).time);
+				}
+
+				alert("encontrados registros " + resultado.rows.length);
+
+			}, function(e) {
+
+				console.log("falha na consulta");
+			}, function(fin) {
+
+				console.log("final");
+			});
+		}, function(err) {
+
+			console.log("erros no primeiro ");
+		}, function(fn) {
+
+			console.log("final no primeiro");
+		});
+	}
+}
+
+function err(e) {
+
+	console.log("transacao erro");
+	alert(e);
+}
+
+function finalli() {
+	console.log("transacao final");
+}
+
