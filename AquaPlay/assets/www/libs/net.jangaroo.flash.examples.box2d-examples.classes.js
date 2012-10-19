@@ -2096,7 +2096,7 @@ function consultaRaking(func) {
 		db.transaction(function(tx) {
 
 			var sql = "select * from ranking";
-			var html = "<li> NÃo hÃ¡ dados </li>";
+			var html = "<li> NÃo há dados </li>";
 			tx.executeSql(sql, [], function(tx, resultado) {
 				html = "";
 				for (i = 0; i < resultado.rows.length; i++) {
