@@ -2043,7 +2043,9 @@ function exec(tx) {
 
 	console.log("transacao rolando");
 
-	sql = "create table if not exists ranking (id integer Primary Key autoincrement, user varchar(100), time varchar(100))"
+	sql = "create table if not exists ranking (id integer Primary Key autoincrement, user varchar(100), time varchar(100))";
+	
+	tx.executeSql(sql);
 }
 
 function consultaBanco() {
