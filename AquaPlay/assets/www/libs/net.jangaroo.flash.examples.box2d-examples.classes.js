@@ -453,11 +453,12 @@ joo.classLoader.prepare(
 				//alert(this.m_currId);
 				
                 if (!Main.m_currTest) {
-                alert(Main.m_currTest);
+                //alert(Main.m_currTest);
                     /*switch (this.m_currId) {
                         default:
                             Main.m_currTest = new tests[this.m_currId]();
                     }*/
+					//alert(NUMBER_TELA)
 					Main.m_currTest = new tests[NUMBER_TELA]();
 					tempoJogo = Math.round((new Date()).getTime() / 1000);
                 }
@@ -491,7 +492,7 @@ joo.classLoader.prepare(
 					* coloca a tela de acabou o jogo
 					*/
 					controleBtReiniciar = 1;
-					NUMBER_TELA = 1;
+					NUMBER_TELA = 2;
 					//alert("acabou o jogo, tempo acabou");
 				}
             },
@@ -952,13 +953,14 @@ joo.classLoader.prepare(
             },
             
             "public function reiniciarJogo", function () {  
+				 //alert("aqui");
                  Main.m_currTest = null;
-                 NUMBER_TELA = 4;
+                 NUMBER_TELA = 1;
 				 Main.m_currTest = new Main.tests[NUMBER_TELA]();
             },
             "public function verRanking", function () {
                  Main.m_currTest = null;
-                 NUMBER_TELA = 4;
+                 NUMBER_TELA = 3;
 				 Main.m_currTest = new Main.tests[NUMBER_TELA]();
             },
             
