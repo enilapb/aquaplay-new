@@ -2086,6 +2086,54 @@ function consultaBanco() {
 	}
 }
 
+function consultaRaking(func) {
+
+	/*
+	 * pega a variavel global do banco
+	 */
+	if (db) {
+
+		db.transaction(function(tx) {
+
+			var sql = "select * from ranking";
+			var html = "<li> NÃo hÃ¡ dados </li>";
+			tx.executeSql(sql, [], function(tx, resultado) {
+				html = "";
+				for (i = 0; i < resultado.rows.length; i++) {
+					html += "<li> " +
+								"<table CELLSPACING=2 CELLPADDING=3>" +
+									"<tr>" +
+										"<td>"	+
+											resultado.rows.item(i).user + 
+										"</td>" + 
+										"<td>" +
+											resultado.rows.item(i).time +
+										"</td>" +
+									"</tr>" +
+								"</table>"
+							"</li>";
+					//alert(html);
+				}
+
+				func(html);
+
+			}, function(e) {
+
+				console.log("falha na consulta");
+			}, function(fin) {
+
+				console.log("final");
+			});
+		}, function(err) {
+
+			console.log("erros no primeiro ");
+		}, function(fn) {
+
+			console.log("final no primeiro");
+		});
+	}
+}
+
 function err(e) {
 
 	console.log("transacao erro");

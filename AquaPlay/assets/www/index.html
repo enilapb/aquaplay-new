@@ -39,5 +39,19 @@ width: 100%; height: 100%; background-color: rgb(41, 44, 44); " tabindex="0">
 	<button name="esquerdo" type="button" style="width: 50%; height: 70px; float: left;" onclick="Main.m_currTest.createArLeft()"> Botão Esquerdo </button>
 	<button name="direito" type="button" style="width: 50%; height: 70px; float: right;" onclick="Main.m_currTest.createArRight()"> Botão Direito </button>
 </div>
+<div id="ranking" style="display:none">
+		<script type="text/javascript">
+			function populaLista(html) {
+				$(".listaRaking").append(html);
+				$(".listaRaking").listview("refresh");
+			}
+
+			setupDB();
+			consultaRaking(populaLista);
+		</script>		
+		<div>
+			<ul id="Gallery" class="listaRaking"></ul>
+		</div>
+</div>
 </body>
 </html>
