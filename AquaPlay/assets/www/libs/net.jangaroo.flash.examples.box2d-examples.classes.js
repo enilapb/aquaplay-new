@@ -453,6 +453,7 @@ joo.classLoader.prepare(
 				//alert(this.m_currId);
 				
                 if (!Main.m_currTest) {
+                alert(Main.m_currTest);
                     /*switch (this.m_currId) {
                         default:
                             Main.m_currTest = new tests[this.m_currId]();
@@ -507,7 +508,7 @@ joo.classLoader.prepare(
           
             
         ];
-    }, [], ["flash.display.MovieClip", "flash.events.Event", "flash.display.Sprite", "General.Input", "flash.text.TextField", "flash.text.TextFormat", "flash.text.TextFormatAlign", "TestBed.TestRagdoll", "TestBed.TestCompound", "TestBed.TestCrankGearsPulley", "TestBed.TestBridge", "TestBed.TestStack", "TestBed.TestCCD", "TestBed.TestTheoJansen", "TestBed.TestBuoyancy","TestBed.TestOneSidedPlatform", "TestBed.TestBreakable", "TestBed.TestRaycast", "TestBed.TestSensor","TestBed.TestPageStart","TestBed.TestGameOver","TestBed.TestRanking", "General.FRateLimiter", "General.FpsCounter"], "0.8.0", "0.8.1"
+    }, [], ["flash.display.MovieClip", "flash.events.Event", "flash.display.Sprite", "General.Input", "flash.text.TextField", "flash.text.TextFormat", "flash.text.TextFormatAlign", "TestBed.TestRagdoll", "TestBed.TestCompound", "TestBed.TestCrankGearsPulley", "TestBed.TestBridge", "TestBed.TestStack", "TestBed.TestCCD", "TestBed.TestTheoJansen", "TestBed.TestBuoyancy","TestBed.TestOneSidedPlatform", "TestBed.TestBreakable", "TestBed.TestRaycast", "TestBed.TestSensor","General.FRateLimiter", "General.FpsCounter"], "0.8.0", "0.8.1"
 );
 // class TestBed.Test
 joo.classLoader.prepare(
