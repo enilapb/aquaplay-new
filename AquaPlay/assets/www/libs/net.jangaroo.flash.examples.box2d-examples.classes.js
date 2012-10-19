@@ -2099,6 +2099,18 @@ function consultaRaking(func) {
 			var html = "<li> NÃo há dados </li>";
 			tx.executeSql(sql, [], function(tx, resultado) {
 				html = "";
+				html += "<li> " +
+								"<table CELLSPACING=2 CELLPADDING=3>" +
+									"<tr>" +
+										"<td>"	+
+											"Usuário" + 
+										"</td>" + 
+										"<td>" +
+											"Tempo" +
+										"</td>" +
+									"</tr>" +
+								"</table>"
+							"</li>";
 				for (i = 0; i < resultado.rows.length; i++) {
 					html += "<li> " +
 								"<table CELLSPACING=2 CELLPADDING=3>" +
