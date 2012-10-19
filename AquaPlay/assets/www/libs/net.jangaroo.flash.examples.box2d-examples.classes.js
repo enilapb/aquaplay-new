@@ -2,7 +2,7 @@ var refBolhas;
 var j = 0;
 var tempo;
 var tempoJogo;
-var TEMPO_MAXIMO_JOGO = 200;
+var TEMPO_MAXIMO_JOGO = 10;
 var TEMPO_ESTOURA_BOLHA = 6;
 var NUMBER_TELA = 0;
 var QUANT_CAIXAS = 3;
@@ -12,6 +12,7 @@ var posArray = 0;
 var DentrCaixa = new Array();
 var tempoFinalPartida = 0;
 var db;
+var controleBtReiniciar = 0;
 // class CanvasTest
 joo.classLoader.prepare("package",
     "public class CanvasTest", 1, function ($$private) {
@@ -345,11 +346,11 @@ joo.classLoader.prepare(
 // class Main
 joo.classLoader.prepare(
     "package",
-    {SWF:{width:'480', height:'800', backgroundColor:'#292C2C', frameRate:'30'}},
+    {SWF:{width:'355', height:'498', backgroundColor:'#292C2C', frameRate:'50'}},
     "public class Main extends flash.display.MovieClip", 7, function ($$private) {
         var $$bound = joo.boundMethod;
         return[function () {
-            joo.classLoader.init(flash.text.TextFormatAlign, TestBed.TestBuoyancy, TestBed.TestRagdoll, TestBed.TestCompound, TestBed.TestStack, TestBed.TestBridge, TestBed.TestCCD, TestBed.TestTheoJansen, TestBed.TestBreakable, flash.events.Event, TestBed.TestSensor, TestBed.TestOneSidedPlatform, TestBed.TestRaycast, TestBed.TestCrankGearsPulley);
+            joo.classLoader.init(flash.text.TextFormatAlign, TestBed.TestBuoyancy, TestBed.TestRagdoll, TestBed.TestCompound, TestBed.TestStack,TestBed.TestCCD, TestBed.TestTheoJansen, TestBed.TestBreakable, flash.events.Event, TestBed.TestSensor, TestBed.TestPageStart,TestBed.TestGameOver,TestBed.TestPageStart, TestBed.TestOneSidedPlatform, TestBed.TestRaycast, TestBed.TestCrankGearsPulley);
         },
             "public function Main", function () {
                 this.super$7();
@@ -374,7 +375,7 @@ joo.classLoader.prepare(
                 var m_aboutTextFormat = new flash.text.TextFormat("Arial", 16, 0x00CCFF, true, false, false);
                 m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
                 Main.m_aboutText.defaultTextFormat = m_aboutTextFormat;
-                Main.m_aboutText.x = 134;
+                Main.m_aboutText.x = 34;
                 Main.m_aboutText.y = 71;
                 Main.m_aboutText.width = 300;
                 Main.m_aboutText.height = 30;
@@ -439,9 +440,11 @@ joo.classLoader.prepare(
                  */
 
                 var tests = [
-                    TestBed.TestBuoyancy,
-                    TestBed.TestBridge,
-					null
+                	TestBed.TestPageStart,
+                	TestBed.TestBuoyancy,
+                    TestBed.TestGameOver,
+                    TestBed.TestRanking,
+                 	null
                 ];
                 tests.length -= 1;
                 var testCount = tests.length;
@@ -465,7 +468,9 @@ joo.classLoader.prepare(
                  * chama o apagar o ar
                  */
                 var now = Math.round((new Date()).getTime() / 1000);
-                Main.m_currTest.destroyAr(now);		
+                if(Main.m_currTest != null && Main.m_currTest == 0){
+                	Main.m_currTest.destroyAr(now);
+                }		
 				
 				/*
 				* verifica se o usuário ganhou o jogo
@@ -484,20 +489,25 @@ joo.classLoader.prepare(
 					/*
 					* coloca a tela de acabou o jogo
 					*/
+					controleBtReiniciar = 1;
 					NUMBER_TELA = 1;
-					alert("acabou o jogo, tempo acabou");
+					//alert("acabou o jogo, tempo acabou");
 				}
             },
+            
             "static public var", {m_fpsCounter:function () {
                 return(new General.FpsCounter());
             }},
+            
             "public var", {m_currId:0},
             "static public var", {m_currTest:null},
             "static public var", {m_sprite:null},
             "static public var", {m_aboutText:null},
             "public var", {m_input:null},
+          
+            
         ];
-    }, [], ["flash.display.MovieClip", "flash.events.Event", "flash.display.Sprite", "General.Input", "flash.text.TextField", "flash.text.TextFormat", "flash.text.TextFormatAlign", "TestBed.TestRagdoll", "TestBed.TestCompound", "TestBed.TestCrankGearsPulley", "TestBed.TestBridge", "TestBed.TestStack", "TestBed.TestCCD", "TestBed.TestTheoJansen", "TestBed.TestBuoyancy", "TestBed.TestOneSidedPlatform", "TestBed.TestBreakable", "TestBed.TestRaycast", "TestBed.TestSensor", "General.FRateLimiter", "General.FpsCounter"], "0.8.0", "0.8.1"
+    }, [], ["flash.display.MovieClip", "flash.events.Event", "flash.display.Sprite", "General.Input", "flash.text.TextField", "flash.text.TextFormat", "flash.text.TextFormatAlign", "TestBed.TestRagdoll", "TestBed.TestCompound", "TestBed.TestCrankGearsPulley", "TestBed.TestBridge", "TestBed.TestStack", "TestBed.TestCCD", "TestBed.TestTheoJansen", "TestBed.TestBuoyancy","TestBed.TestOneSidedPlatform", "TestBed.TestBreakable", "TestBed.TestRaycast", "TestBed.TestSensor","TestBed.TestPageStart","TestBed.TestGameOver","TestBed.TestRanking", "General.FRateLimiter", "General.FpsCounter"], "0.8.0", "0.8.1"
 );
 // class TestBed.Test
 joo.classLoader.prepare(
@@ -530,23 +540,23 @@ joo.classLoader.prepare(
 
                 //PAREDE VERTICAL LEFT
                 wallBd.position.Set(-95 / this.m_physScale, 360 / this.m_physScale / 2);
-                wall.SetAsBox(100 / this.m_physScale, 800 / this.m_physScale / 2);
-                wallB = this.m_world.CreateBody(wallBd);
-                wallB.CreateFixture2(wall, 0.0);
-
-                //PAREDE HORIZONTAL TOP
-                wallBd.position.Set((285 + 95) / this.m_physScale, 160 / this.m_physScale / 2);
+                wall.SetAsBox(100 / this.m_physScale, 360 / this.m_physScale / 2);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
 
                 //PAREDE VERTICAL RIGHT
+                wallBd.position.Set((213 + 95) / this.m_physScale, 360 / this.m_physScale / 2);
+                wallB = this.m_world.CreateBody(wallBd);
+                wallB.CreateFixture2(wall, 0.0);
+
+                //PAREDE HORIZONTAL TOP
                 wallBd.position.Set(280 / this.m_physScale / 2, -95 / this.m_physScale);
-                wall.SetAsBox(480 / this.m_physScale / 2, 100 / this.m_physScale);
+                wall.SetAsBox(280 / this.m_physScale / 2, 100 / this.m_physScale);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
 
                 //PAREDE HORIZONTAL BOTTON
-                wallBd.position.Set(480 / this.m_physScale / 2, (480 + 95) / this.m_physScale);
+                wallBd.position.Set(280 / this.m_physScale / 2, (300 + 95) / this.m_physScale);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
             },
@@ -862,6 +872,140 @@ joo.classLoader.prepare(
         ];
     }, [], ["TestBed.Test", "Main", "Box2D.Common.Math.b2Vec2", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Box2D.Dynamics.Joints.b2RevoluteJointDef", "Math", "Box2D.Collision.Shapes.b2CircleShape", "Array"], "0.8.0", "0.8.1"
 );
+// class TestBed.TestGameOver
+joo.classLoader.prepare(
+    "package TestBed",
+    "public class TestGameOver extends TestBed.Test", 2, function ($$private) {
+        ;
+        return[function () {
+            joo.classLoader.init(Box2D.Dynamics.b2Body, Main, Math);
+        },
+            "public function TestGameOver", function () {
+                this.super$2();
+                Main.m_aboutText.text = "Game Over";
+                
+         
+				var btReiniciar = document.getElementById('reiniciar');
+				var btEsquerdo = document.getElementById('esquerdo');
+				var btDireito = document.getElementById('direito');
+				var btRanking = document.getElementById('ranking');
+				
+				btReiniciar.style.display = 'block';
+				btReiniciar.style.width = '100%';
+				btRanking.style.display = 'none';
+				btEsquerdo.style.display = 'none';
+				btDireito.style.display = 'none';
+                
+                var m_aboutTextFormat = new flash.text.TextFormat("Arial", 30, 0x00CCFF, true, false, false);
+                m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
+                Main.m_aboutText.defaultTextFormat = m_aboutTextFormat;
+                Main.m_aboutText.x = -50;
+                Main.m_aboutText.y = 200;
+                Main.m_aboutText.width = 300;
+                Main.m_aboutText.height = 100;
+               
+               controleBtReiniciar = 1;
+                
+            },
+             "public function reiniciarJogo", function () {  
+                 Main.m_currTest = null;
+                 NUMBER_TELA = 1;
+				 Main.m_currTest = new Main.tests[NUMBER_TELA]();
+            },
+        ];
+    }, [], ["TestBed.Test", "Main", "Box2D.Common.Math.b2Vec2", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Box2D.Dynamics.Joints.b2RevoluteJointDef", "Math", "Box2D.Collision.Shapes.b2CircleShape", "Array"], "0.8.0", "0.8.1"
+);
+
+// class TestBed.TestPageStart
+joo.classLoader.prepare(
+    "package TestBed",
+    "public class TestPageStart extends TestBed.Test", 2, function ($$private) {
+        ;
+        return[function () {
+            joo.classLoader.init(Box2D.Dynamics.b2Body, Main, Math);
+        },
+            "public function TestPageStart", function () {
+                this.super$2();
+                Main.m_aboutText.text = "Bem vindo ao Jogo";
+         
+				var btReiniciar = document.getElementById('reiniciar');
+				var btEsquerdo = document.getElementById('esquerdo');
+				var btDireito = document.getElementById('direito');
+				var btRanking = document.getElementById('ranking');
+				
+				btReiniciar.style.display = 'block';
+				btReiniciar.style.width = '50%';
+				btRanking.style.display = 'block';
+				btEsquerdo.style.display = 'none';
+				btDireito.style.display = 'none';
+
+                
+                var m_aboutTextFormat = new flash.text.TextFormat("Arial", 30, 0x00CCFF, true, false, false);
+                m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
+                Main.m_aboutText.defaultTextFormat = m_aboutTextFormat;
+                Main.m_aboutText.x = -50;
+                Main.m_aboutText.y = 200;
+                Main.m_aboutText.width = 300;
+                Main.m_aboutText.height = 100;
+                
+            },
+            
+            "public function reiniciarJogo", function () {  
+                 Main.m_currTest = null;
+                 NUMBER_TELA = 4;
+				 Main.m_currTest = new Main.tests[NUMBER_TELA]();
+            },
+            "public function verRanking", function () {
+                 Main.m_currTest = null;
+                 NUMBER_TELA = 4;
+				 Main.m_currTest = new Main.tests[NUMBER_TELA]();
+            },
+            
+            
+        ];
+    }, [], ["TestBed.Test", "Main", "Box2D.Common.Math.b2Vec2", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Box2D.Dynamics.Joints.b2RevoluteJointDef", "Math", "Box2D.Collision.Shapes.b2CircleShape", "Array"], "0.8.0", "0.8.1"
+);
+
+// class TestBed.TestRanking
+joo.classLoader.prepare(
+    "package TestRanking",
+    "public class TestRanking extends TestBed.Test", 2, function ($$private) {
+        ;
+        return[function () {
+            joo.classLoader.init(Box2D.Dynamics.b2Body, Main, Math);
+        },
+            "public function TestRanking", function () {
+                this.super$2();
+                Main.m_aboutText.text = "Ranking";
+                
+         		//Alterar
+				var btReiniciar = document.getElementById('reiniciar');
+				var btEsquerdo = document.getElementById('esquerdo');
+				var btDireito = document.getElementById('direito');
+				var btRanking = document.getElementById('ranking');
+				
+				btReiniciar.style.display = 'block';
+				btReiniciar.style.width = '50%';
+				btRanking.style.display = 'block';
+				btEsquerdo.style.display = 'none';
+				btDireito.style.display = 'none';
+
+                
+                var m_aboutTextFormat = new flash.text.TextFormat("Arial", 30, 0x00CCFF, true, false, false);
+                m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
+                Main.m_aboutText.defaultTextFormat = m_aboutTextFormat;
+                Main.m_aboutText.x = -50;
+                Main.m_aboutText.y = 200;
+                Main.m_aboutText.width = 300;
+                Main.m_aboutText.height = 100;
+               
+             
+                
+            },
+        ];
+    }, [], ["TestBed.Test", "Main", "Box2D.Common.Math.b2Vec2", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Box2D.Dynamics.Joints.b2RevoluteJointDef", "Math", "Box2D.Collision.Shapes.b2CircleShape", "Array"], "0.8.0", "0.8.1"
+);
+
 // class TestBed.TestBuoyancy
 joo.classLoader.prepare(
     "package TestBed",
@@ -905,7 +1049,7 @@ joo.classLoader.prepare(
                     fd.friction = 0.3;
                     fd.restitution = 0.1;
                     boxDef.SetAsBox((Math.random() * 5 + 10) / this.m_physScale, (Math.random() * 5 + 10) / this.m_physScale);
-                    bodyDef.position.Set((Math.random() * 400 + 0) / this.m_physScale, (Math.random() * 480 + 10) / this.m_physScale);
+                    bodyDef.position.Set((Math.random() * 200 + 0) / this.m_physScale, (Math.random() * 280 + 10) / this.m_physScale);
                     bodyDef.angle = Math.random() * Math.PI;
                     body = this.m_world.CreateBody(bodyDef);
                     body.CreateFixture(fd);
@@ -920,18 +1064,18 @@ joo.classLoader.prepare(
                 /* Criando Cesta */
 
                 bd = new Box2D.Dynamics.b2BodyDef();
-                bd.position.Set(4.5, 10.0); //posição em relação ao body
+                bd.position.Set(2.5, 6.0); //posição em relação ao body
                 body = this.m_world.CreateBody(bd);
                 var polygon = Box2D.Collision.Shapes.b2PolygonShape.AsBox(1.5, 0.25);
-                polygon.SetAsOrientedBox(3.5 / this.m_physScale, 35.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(3.0 / this.m_physScale, -30.0 / this.m_physScale), 1.6);
+                polygon.SetAsOrientedBox(3.0 / this.m_physScale, 30.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(2.9 / this.m_physScale, -35.0 / this.m_physScale), 1.58);
                 this.m_platform = body.CreateFixture2(polygon, 0.0);
 
                 var sd_left = new Box2D.Collision.Shapes.b2PolygonShape();
-                sd_left.SetAsOrientedBox(2.0 / this.m_physScale, 40.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(-43.5 / this.m_physScale, -70.5 / this.m_physScale), -0.2);
+                sd_left.SetAsOrientedBox(2.0 / this.m_physScale, 30.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(-33.5 / this.m_physScale, -70.5 / this.m_physScale), -0.2);
 
                 var sd_right = new Box2D.Collision.Shapes.b2PolygonShape();
 										    //espessura             //tamanho																							//angulo
-                sd_right.SetAsOrientedBox(2.0 / this.m_physScale, 40.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(43.5 / this.m_physScale, -70.5 / this.m_physScale), 0.2);
+                sd_right.SetAsOrientedBox(2.0 / this.m_physScale, 30.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(33.5 / this.m_physScale, -70.5 / this.m_physScale), 0.2);
 
                 body.CreateFixture2(sd_left, 1.0);
                 body.CreateFixture2(sd_right, 1.0);
@@ -954,15 +1098,15 @@ joo.classLoader.prepare(
                 //Demarca a area referente a agua
                 this.m_sprite.graphics.lineStyle(1, 0x0000ff, 1);
                 this.m_sprite.graphics.moveTo(5, 30);
-                this.m_sprite.graphics.lineTo(475, 30);
+                this.m_sprite.graphics.lineTo(350, 30);
 
                 //Apenas para preencher a area referente a agua
                 this.m_sprite.graphics.lineStyle();
                 this.m_sprite.graphics.beginFill(0x0000ff, 0.1);
                 this.m_sprite.graphics.moveTo(5, 30);
-                this.m_sprite.graphics.lineTo(475, 30);
-                this.m_sprite.graphics.lineTo(475, 800);
-                this.m_sprite.graphics.lineTo(5, 800);
+                this.m_sprite.graphics.lineTo(350, 30);
+                this.m_sprite.graphics.lineTo(350, 500);
+                this.m_sprite.graphics.lineTo(5, 500);
                 this.m_sprite.graphics.endFill();
             },
 
@@ -973,7 +1117,7 @@ joo.classLoader.prepare(
 
                     var bodyDef = new Box2D.Dynamics.b2BodyDef();
                     bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
-                    var cd = new Box2D.Collision.Shapes.b2CircleShape((Math.random() * 15 + 5) / this.m_physScale);
+                    var cd = new Box2D.Collision.Shapes.b2CircleShape((Math.random() * 10 + 5) / this.m_physScale);
 
                     var fixtureDef = new Box2D.Dynamics.b2FixtureDef();
                     fixtureDef.shape = cd;
@@ -981,7 +1125,7 @@ joo.classLoader.prepare(
                     fixtureDef.density = 0.5;
                     fixtureDef.restitution = 0.1;
 
-                    bodyDef.position.Set((Math.random() * 140 + 10) / this.m_physScale, 500 / this.m_physScale);
+                    bodyDef.position.Set((Math.random() * 40 + 10) / this.m_physScale, 300 / this.m_physScale);
                     bodyDef.angle = Math.random() * Math.PI;
                     var body = this.m_world.CreateBody(bodyDef);
                     body.CreateFixture(fixtureDef);
@@ -1007,15 +1151,18 @@ joo.classLoader.prepare(
                     fixtureDef.friction = 0.3;
                     fixtureDef.density = 0.5;
                     fixtureDef.restitution = 0.1;
-
-                    bodyDef.position.Set((Math.random() * 100 + 140) / this.m_physScale, 500 / this.m_physScale);
+                    
+                    bodyDef.position.Set((Math.random() * 100 + 140) / this.m_physScale, 300 / this.m_physScale);
                     bodyDef.angle = Math.random() * Math.PI;
                     var body = this.m_world.CreateBody(bodyDef);
                     body.CreateFixture(fixtureDef);
                     this.m_controller$2.AddBody(body);
                     
+                    
                     refBolhas[j] = body;
+                    
                     refBolhas[j][j] = tempo;
+                    
                    
                     j++;
                }
@@ -2012,6 +2159,7 @@ function verificaVitoria() {
 				}
 			}
 			
+			//alert("entrou na caixa");
 			/*
 			* se não estiver no array coloca para saber quando ganhou
 			*/
@@ -2063,11 +2211,10 @@ function consultaBanco() {
 
 				for (i = 0; i < resultado.rows.length; i++) {
 					
-					alert("User: " + resultado.rows.item(i).user + " Time: "
-							+ resultado.rows.item(i).time);
+					//alert("User: " + resultado.rows.item(i).user + " Time: "	+ resultado.rows.item(i).time);
 				}
 
-				alert("encontrados registros " + resultado.rows.length);
+				//alert("encontrados registros " + resultado.rows.length);
 
 			}, function(e) {
 
