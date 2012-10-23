@@ -1242,20 +1242,21 @@ joo.classLoader.prepare(
                 body = this.m_world.CreateBody(bd);
                 var polygon = Box2D.Collision.Shapes.b2PolygonShape.AsBox(1.5, 0.25);
 				
+								//espessura //tamanho	//desloc_lateral //desloc_vertical //angulo
                 polygon.SetAsOrientedBox(0.07, 1, new Box2D.Common.Math.b2Vec2(0.5, -1.3), 1.58);
 				//polygon.SetAsOrientedBox(3.0 / this.m_physScale, 30.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(2.9 / this.m_physScale, -35.0 / this.m_physScale), 1.58);
                 this.m_platform = body.CreateFixture2(polygon, 0.0);
 
                 var sd_left = new Box2D.Collision.Shapes.b2PolygonShape();
-                
+				
+										//espessura //tamanho	//desloc_lateral //desloc_vertical //angulo
 				sd_left.SetAsOrientedBox(0.07, 1, new Box2D.Common.Math.b2Vec2(-0.5, -2.3), -0.2);
 				//sd_left.SetAsOrientedBox(2.0 / this.m_physScale, 30.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(-33.5 / this.m_physScale, -70.5 / this.m_physScale), -0.2);
 
                 var sd_right = new Box2D.Collision.Shapes.b2PolygonShape();
-										    //espessura             //tamanho																							//angulo
                 //sd_right.SetAsOrientedBox(2.0 / this.m_physScale, 30.0 / this.m_physScale, new Box2D.Common.Math.b2Vec2(33.5 / this.m_physScale, -70.5 / this.m_physScale), 0.2);
 				
-										//espessura //tamanho	//desloc_lateral //desloc_vertical
+								//espessura //tamanho	//desloc_lateral //desloc_vertical //angulo
 				sd_right.SetAsOrientedBox(0.07, 1, new Box2D.Common.Math.b2Vec2(1.5, -2.3), 0.2);
 
                 body.CreateFixture2(sd_left, 1.0);
