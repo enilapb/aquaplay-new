@@ -2,10 +2,10 @@ var refBolhas;
 var j = 0;
 var tempo;
 var tempoJogo;
-var TEMPO_MAXIMO_JOGO = 10;
-var TEMPO_ESTOURA_BOLHA = 6;
+var TEMPO_MAXIMO_JOGO = 60;
+var TEMPO_ESTOURA_BOLHA = 12;
 var NUMBER_TELA = 0;
-var QUANT_CAIXAS = 3;
+var QUANT_CAIXAS = 1;
 var arrayCaixinhas = new Array();
 var my_m_physScale;
 var posArray = 0;
@@ -13,6 +13,8 @@ var DentrCaixa = new Array();
 var tempoFinalPartida = 0;
 var db;
 var controleBtReiniciar = 0;
+var jogoEmExecucao = 0;
+
 // class CanvasTest
 joo.classLoader.prepare("package",
     "public class CanvasTest", 1, function ($$private) {
@@ -346,11 +348,11 @@ joo.classLoader.prepare(
 // class Main
 joo.classLoader.prepare(
     "package",
-    {SWF:{width:'355', height:'498', backgroundColor:'#292C2C', frameRate:'50'}},
+    {SWF:{width:'355', height:'498', backgroundColor:'#292C2C', frameRate:'30'}},
     "public class Main extends flash.display.MovieClip", 7, function ($$private) {
         var $$bound = joo.boundMethod;
         return[function () {
-            joo.classLoader.init(flash.text.TextFormatAlign, TestBed.TestBuoyancy, TestBed.TestRagdoll, TestBed.TestCompound, TestBed.TestStack,TestBed.TestCCD, TestBed.TestTheoJansen, TestBed.TestBreakable, flash.events.Event, TestBed.TestSensor, TestBed.TestPageStart,TestBed.TestGameOver,TestBed.TestPageStart, TestBed.TestOneSidedPlatform, TestBed.TestRaycast, TestBed.TestCrankGearsPulley);
+            joo.classLoader.init(flash.text.TextFormatAlign, TestBed.TestBuoyancy, TestBed.TestRagdoll, TestBed.TestCompound, TestBed.TestStack,TestBed.TestCCD, TestBed.TestTheoJansen, TestBed.TestBreakable, flash.events.Event, TestBed.TestSensor, TestBed.TestPageStart, TestBed.TestRanking, TestBed.TestSucesso, TestBed.TestGameOver, TestBed.TestOneSidedPlatform, TestBed.TestRaycast, TestBed.TestCrankGearsPulley);
         },
             "public function Main", function () {
                 this.super$7();
@@ -361,16 +363,20 @@ joo.classLoader.prepare(
                 Main.m_sprite = new flash.display.Sprite();
                 this.addChild(Main.m_sprite);
                 this.m_input = new General.Input(Main.m_sprite);
+                
                 var instructions_text = new flash.text.TextField();
                 var instructions_text_format = new flash.text.TextFormat("Arial", 16, 0xffffff, false, false, false);
                 instructions_text_format.align = flash.text.TextFormatAlign.RIGHT;
                 instructions_text.defaultTextFormat = instructions_text_format;
-                instructions_text.x = 20;
-                instructions_text.y = 4.5;
-                instructions_text.width = 495;
-                instructions_text.height = 61;
+                instructions_text.x = 34;
+                instructions_text.y = 71;
+                instructions_text.width = 300;
+                instructions_text.height = 30;
+                
                 //instructions_text.text = "Box2DFlashAS3 2.1a\n'Left'/'Right' arrows to go to previous/next example. \n'R' to reset.";
                 this.addChild(instructions_text);
+                
+                
                 Main.m_aboutText = new flash.text.TextField();
                 var m_aboutTextFormat = new flash.text.TextFormat("Arial", 16, 0x00CCFF, true, false, false);
                 m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
@@ -383,6 +389,23 @@ joo.classLoader.prepare(
                 instructions_text.mouseEnabled = false;
                 Main.m_aboutText.mouseEnabled = false;
                 
+                
+                /*TESTE*/
+                Main.novoteste = new flash.text.TextField();
+                
+                var m_aboutTextFormat = new flash.text.TextFormat("Arial", 16, 0x00CCFF, true, false, false);
+                m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
+                Main.novoteste.defaultTextFormat = m_aboutTextFormat;
+                Main.novoteste.text = "";
+                Main.novoteste.x = 34;
+                Main.novoteste.y = 71;
+                Main.novoteste.width = 300;
+                Main.novoteste.height = 30;
+                this.addChild(Main.novoteste);
+                Main.novoteste.mouseEnabled = false;
+                
+                
+                /*
 				//cria o banco
 				setupDB();
 				
@@ -400,8 +423,9 @@ joo.classLoader.prepare(
 					tx.executeSql(sql2, [user, time]);
 
 				} , err, finalli);
-			
-				consultaBanco();
+			*/
+								
+				
             },
             "public function update", function (e) {
                 Main.m_sprite.graphics.clear();
@@ -444,15 +468,15 @@ joo.classLoader.prepare(
                 	TestBed.TestBuoyancy,
                     TestBed.TestGameOver,
                     TestBed.TestRanking,
+                    TestBed.TestSucesso,
                  	null
                 ];
                 tests.length -= 1;
                 var testCount = tests.length;
                 this.m_currId = (this.m_currId + testCount) % testCount;
 				
-				//alert(this.m_currId);
-				
                 if (!Main.m_currTest) {
+               
                 //alert(Main.m_currTest);
                     /*switch (this.m_currId) {
                         default:
@@ -460,8 +484,10 @@ joo.classLoader.prepare(
                     }*/
 					//alert(NUMBER_TELA)
 					Main.m_currTest = new tests[NUMBER_TELA]();
-					tempoJogo = Math.round((new Date()).getTime() / 1000);
+					//
                 }
+                
+              
                 Main.m_currTest.Update();
                 General.Input.update();
                 Main.m_fpsCounter.update();
@@ -470,31 +496,38 @@ joo.classLoader.prepare(
                  * chama o apagar o ar
                  */
                 var now = Math.round((new Date()).getTime() / 1000);
-                if(Main.m_currTest != null && Main.m_currTest == 0){
+                
+                if(NUMBER_TELA == 1){
                 	Main.m_currTest.destroyAr(now);
                 }		
 				
 				/*
 				* verifica se o usuário ganhou o jogo
 				*/
-				if(verificaVitoria()) {
+				if(jogoEmExecucao == 1 && verificaVitoria()) {
 					//faz o que se deve fazer quando ganha o jogo
 					tempoFinalPartida = (now - tempoJogo);
-					alert("vc ganhou, seu time foi: " + tempoFinalPartida);
+					NUMBER_TELA = 4;
+					//alert("vc ganhou, seu time foi: " + tempoFinalPartida);
 				} 
 				
 				/*
 				* Método de verificar tempo do jogo, para determinar quando acabou
 				*/
-				if (tempoJogo <= (now - TEMPO_MAXIMO_JOGO)) {	
-					Main.m_currTest = null;
-					/*
-					* coloca a tela de acabou o jogo
-					*/
-					controleBtReiniciar = 1;
-					NUMBER_TELA = 2;
-					//alert("acabou o jogo, tempo acabou");
+				
+				if(jogoEmExecucao == 1){
+					if (tempoJogo <= (now - TEMPO_MAXIMO_JOGO)) {	
+						Main.m_currTest = null;
+						/*
+						* coloca a tela de acabou o jogo
+						*/
+						controleBtReiniciar = 1;
+						NUMBER_TELA = 2;
+						//alert("acabou o jogo, tempo acabou");
+					}
 				}
+			
+				
             },
             
             "static public var", {m_fpsCounter:function () {
@@ -506,10 +539,14 @@ joo.classLoader.prepare(
             "static public var", {m_sprite:null},
             "static public var", {m_aboutText:null},
             "public var", {m_input:null},
-          
+             "public function reiniciarJogo", function () {  
+                 Main.m_currTest = null;
+                 NUMBER_TELA = 1;
+				 Main.m_currTest = new Main.tests[NUMBER_TELA]();
+            },
             
         ];
-    }, [], ["flash.display.MovieClip", "flash.events.Event", "flash.display.Sprite", "General.Input", "flash.text.TextField", "flash.text.TextFormat", "flash.text.TextFormatAlign", "TestBed.TestRagdoll", "TestBed.TestCompound", "TestBed.TestCrankGearsPulley", "TestBed.TestBridge", "TestBed.TestStack", "TestBed.TestCCD", "TestBed.TestTheoJansen", "TestBed.TestBuoyancy","TestBed.TestOneSidedPlatform", "TestBed.TestBreakable", "TestBed.TestRaycast", "TestBed.TestSensor","General.FRateLimiter", "General.FpsCounter"], "0.8.0", "0.8.1"
+    }, [], ["flash.display.MovieClip", "flash.events.Event", "flash.display.Sprite", "General.Input", "flash.text.TextField", "flash.text.TextFormat", "flash.text.TextFormatAlign", "TestBed.TestRagdoll", "TestBed.TestCompound",  "TestBed.TestCrankGearsPulley", "TestBed.TestBridge", "TestBed.TestStack", "TestBed.TestCCD", "TestBed.TestTheoJansen", "TestBed.TestBuoyancy","TestBed.TestOneSidedPlatform", "TestBed.TestBreakable", "TestBed.TestRaycast", "TestBed.TestSensor","General.FRateLimiter", "General.FpsCounter"], "0.8.0", "0.8.1"
 );
 // class TestBed.Test
 joo.classLoader.prepare(
@@ -884,7 +921,10 @@ joo.classLoader.prepare(
         },
             "public function TestGameOver", function () {
                 this.super$2();
+                
+                Main.novoteste.text = "";
                 Main.m_aboutText.text = "Game Over";
+                jogoEmExecucao = 0;
                 
          
 				var btReiniciar = document.getElementById('reiniciar');
@@ -907,16 +947,174 @@ joo.classLoader.prepare(
                 Main.m_aboutText.height = 100;
                
                controleBtReiniciar = 1;
-                
+
             },
-             "public function reiniciarJogo", function () {  
+             "public function reiniciarJogo", function () {
+              	
+                 Main.m_currTest = null;
+                 NUMBER_TELA = 1;
+                 tempoJogo = 0;
+				 Main.m_currTest = new Main.tests[NUMBER_TELA]();
+				 
+            },
+            
+        ];
+    }, [], ["TestBed.Test", "Main", "Box2D.Common.Math.b2Vec2", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Box2D.Dynamics.Joints.b2RevoluteJointDef", "Math", "Box2D.Collision.Shapes.b2CircleShape", "Array"], "0.8.0", "0.8.1"
+);
+
+// class TestBed.TestRanking
+joo.classLoader.prepare(
+    "package TestBed",
+    "public class TestRanking extends TestBed.Test", 2, function ($$private) {
+        ;
+        return[function () {
+            joo.classLoader.init(Box2D.Dynamics.b2Body, Main, Math);
+        },
+            "public function TestRanking", function () {
+                this.super$2();
+                Main.m_aboutText.text = "Top 5";
+                jogoEmExecucao = 0;
+                
+                var m_aboutTextFormat = new flash.text.TextFormat("Arial", 30, 0x00CCFF, true, false, false);
+                m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
+                Main.m_aboutText.defaultTextFormat = m_aboutTextFormat;
+                Main.m_aboutText.x = 34;
+                Main.m_aboutText.y = 10;
+                Main.m_aboutText.width = 300;
+                Main.m_aboutText.height = 100;
+               
+                this.consultaRankingTop5();
+                
+                var btReiniciar = document.getElementById('reiniciar');
+				var btEsquerdo = document.getElementById('esquerdo');
+				var btDireito = document.getElementById('direito');
+				var btRanking = document.getElementById('ranking');
+				
+				btReiniciar.style.display = 'block';
+				btReiniciar.style.width = '100%';
+				btRanking.style.display = 'none';
+				btEsquerdo.style.display = 'none';
+				btDireito.style.display = 'none';   
+                
+               
+            },
+             "public function consultaRankingTop5", function () {  
+            
+             	db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
+				if (db) {
+					db.transaction(function(tx) {
+					var html;
+				   	var sql = "select * from ranking";
+				   	tx.executeSql(sql, [], function(tx, resultado) {
+				    
+				    	html = " O Maiores vencedores - TOP\n\n";
+				    	html += " Nome  |  Tempo  \n\n";
+				   
+					    for (i = 0; i < 5; i++) {
+					    	html += " " +       
+					       	resultado.rows.item(i).user +   "  |   " +  
+					       	resultado.rows.item(i).time +   " \n\n";
+					    }
+				      
+				      Main.novoteste.text = html;
+				
+				   }, function(e) {
+				
+				    console.log("falha na consulta");
+				   }, function(fin) {
+				
+				    console.log("final");
+				   });
+				  }, function(err) {
+				
+				   console.log("erros no primeiro ");
+				  }, function(fn) {
+				
+				   console.log("final no primeiro");
+				  });
+				 }
+            },
+              "public function reiniciarJogo", function () {  
                  Main.m_currTest = null;
                  NUMBER_TELA = 1;
 				 Main.m_currTest = new Main.tests[NUMBER_TELA]();
             },
+            
         ];
     }, [], ["TestBed.Test", "Main", "Box2D.Common.Math.b2Vec2", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Box2D.Dynamics.Joints.b2RevoluteJointDef", "Math", "Box2D.Collision.Shapes.b2CircleShape", "Array"], "0.8.0", "0.8.1"
 );
+
+// class TestBed.TestSucesso
+joo.classLoader.prepare(
+    "package TestBed",
+    "public class TestSucesso extends TestBed.Test", 2, function ($$private) {
+        ;
+        return[function () {
+            joo.classLoader.init(Box2D.Dynamics.b2Body, Main, Math);
+        },
+            "public function TestSucesso", function () {
+                this.super$2();
+                Main.m_aboutText.text = "O jogo acabou";
+                jogoEmExecucao = 0;
+                
+                var user = "";
+				var time = tempoFinalPartida;
+                
+                var m_aboutTextFormat = new flash.text.TextFormat("Arial", 30, 0x00CCFF, true, false, false);
+                m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
+                Main.m_aboutText.defaultTextFormat = m_aboutTextFormat;
+                Main.m_aboutText.x = 34;
+                Main.m_aboutText.y = 10;
+                Main.m_aboutText.width = 300;
+                Main.m_aboutText.height = 100;
+               
+                var btReiniciar = document.getElementById('reiniciar');
+				var btEsquerdo = document.getElementById('esquerdo');
+				var btDireito = document.getElementById('direito');
+				var btRanking = document.getElementById('ranking');
+				
+				btReiniciar.style.display = 'block';
+				btReiniciar.style.width = '100%';
+				btRanking.style.display = 'none';
+				btEsquerdo.style.display = 'none';
+				btDireito.style.display = 'none'; 
+				
+				do {
+  					user = prompt('Qual o seu Nome:','');
+ 
+ 				} while (user == "" || user == "null") 
+ 
+ 				alert('Dados ' + user + ', Seja bem vindo!');
+ 				
+ 				inserirDadosDB();  
+               
+            },
+             "public function inserirDadosDB", function () {  
+            
+             	db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
+				if (db) {
+					    db.transaction(function (tx) {   
+					     
+					     sql2 = "insert into ranking (user, time) values (?, ?)";    
+					       
+					     tx.executeSql(sql2, [user, time]);
+					
+					    } , err, finalli);
+					
+					}
+				
+				  
+            },
+              "public function reiniciarJogo", function () {  
+                 Main.m_currTest = null;
+                 NUMBER_TELA = 1;
+				 Main.m_currTest = new Main.tests[NUMBER_TELA]();
+            },
+            
+        ];
+    }, [], ["TestBed.Test", "Main", "Box2D.Common.Math.b2Vec2", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Box2D.Dynamics.Joints.b2RevoluteJointDef", "Math", "Box2D.Collision.Shapes.b2CircleShape", "Array"], "0.8.0", "0.8.1"
+);
+
 
 // class TestBed.TestPageStart
 joo.classLoader.prepare(
@@ -928,6 +1126,8 @@ joo.classLoader.prepare(
         },
             "public function TestPageStart", function () {
                 this.super$2();
+                Main.novoteste.text = "";
+                jogoEmExecucao = 0;
                 Main.m_aboutText.text = "Bem vindo ao Jogo";
          
 				var btReiniciar = document.getElementById('reiniciar');
@@ -939,8 +1139,7 @@ joo.classLoader.prepare(
 				btReiniciar.style.width = '50%';
 				btRanking.style.display = 'block';
 				btEsquerdo.style.display = 'none';
-				btDireito.style.display = 'none';
-
+				btDireito.style.display = 'none';               
                 
                 var m_aboutTextFormat = new flash.text.TextFormat("Arial", 30, 0x00CCFF, true, false, false);
                 m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
@@ -953,58 +1152,17 @@ joo.classLoader.prepare(
             },
             
             "public function reiniciarJogo", function () {  
-				 //alert("aqui");
                  Main.m_currTest = null;
                  NUMBER_TELA = 1;
-				 Main.m_currTest = new Main.tests[NUMBER_TELA]();
+                 Main.m_currTest = new Main.tests[NUMBER_TELA]();
             },
             "public function verRanking", function () {
-                 Main.m_currTest = null;
-                 NUMBER_TELA = 3;
-				 Main.m_currTest = new Main.tests[NUMBER_TELA]();
-            },
-            
-            
-        ];
-    }, [], ["TestBed.Test", "Main", "Box2D.Common.Math.b2Vec2", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Box2D.Dynamics.Joints.b2RevoluteJointDef", "Math", "Box2D.Collision.Shapes.b2CircleShape", "Array"], "0.8.0", "0.8.1"
-);
-
-// class TestBed.TestRanking
-joo.classLoader.prepare(
-    "package TestRanking",
-    "public class TestRanking extends TestBed.Test", 2, function ($$private) {
-        ;
-        return[function () {
-            joo.classLoader.init(Box2D.Dynamics.b2Body, Main, Math);
-        },
-            "public function TestRanking", function () {
-                this.super$2();
-                Main.m_aboutText.text = "Ranking";
-                
-         		//Alterar
-				var btReiniciar = document.getElementById('reiniciar');
-				var btEsquerdo = document.getElementById('esquerdo');
-				var btDireito = document.getElementById('direito');
-				var btRanking = document.getElementById('ranking');
-				
-				btReiniciar.style.display = 'block';
-				btReiniciar.style.width = '50%';
-				btRanking.style.display = 'block';
-				btEsquerdo.style.display = 'none';
-				btDireito.style.display = 'none';
-
-                
-                var m_aboutTextFormat = new flash.text.TextFormat("Arial", 30, 0x00CCFF, true, false, false);
-                m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
-                Main.m_aboutText.defaultTextFormat = m_aboutTextFormat;
-                Main.m_aboutText.x = -50;
-                Main.m_aboutText.y = 200;
-                Main.m_aboutText.width = 300;
-                Main.m_aboutText.height = 100;
+            	Main.m_currTest = null;
+               	NUMBER_TELA = 3;
+                Main.m_currTest = new Main.tests[NUMBER_TELA]();
                
-             
-                
             },
+            
         ];
     }, [], ["TestBed.Test", "Main", "Box2D.Common.Math.b2Vec2", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Box2D.Dynamics.Joints.b2RevoluteJointDef", "Math", "Box2D.Collision.Shapes.b2CircleShape", "Array"], "0.8.0", "0.8.1"
 );
@@ -1024,6 +1182,10 @@ joo.classLoader.prepare(
             "public function TestBuoyancy", function () {
                 this.super$2();
                 this.m_bodies$2 = this.m_bodies$2();
+                Main.novoteste.text = "";
+                jogoEmExecucao = 1;
+                tempoJogo = Math.round((new Date()).getTime() / 1000);
+                
                 refBolhas =new Array();
                 var bc = new Box2D.Dynamics.Controllers.b2BuoyancyController();
                 this.m_controller$2 = bc;
@@ -1092,6 +1254,17 @@ joo.classLoader.prepare(
                 this.m_world.AddController(this.m_controller$2);
 
                 Main.m_aboutText.text = "Aquaplay Mobile";
+                
+                
+                var btReiniciar = document.getElementById('reiniciar');
+				var btEsquerdo = document.getElementById('esquerdo');
+				var btDireito = document.getElementById('direito');
+				var btRanking = document.getElementById('ranking');
+				
+				btReiniciar.style.display = 'none';
+				btRanking.style.display = 'none';
+				btEsquerdo.style.display = 'block';
+				btDireito.style.display = 'block';  
 
             },
             //Criar H20
@@ -1161,12 +1334,9 @@ joo.classLoader.prepare(
                     body.CreateFixture(fixtureDef);
                     this.m_controller$2.AddBody(body);
                     
-                    
                     refBolhas[j] = body;
-                    
                     refBolhas[j][j] = tempo;
                     
-                   
                     j++;
                }
             },
@@ -1188,8 +1358,8 @@ joo.classLoader.prepare(
     }, [], ["TestBed.Test", "Array", "Box2D.Dynamics.Controllers.b2BuoyancyController", "Box2D.Common.Math.b2Vec2", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Math", "Box2D.Collision.Shapes.b2CircleShape", "Main"], "0.8.0", "0.8.1"
 );
 
-// class TestBed.TestCCD
 
+// class TestBed.TestCCD
 joo.classLoader.prepare(
     "package TestBed",
     "public class TestCCD extends TestBed.Test", 2, function ($$private) {
@@ -2199,110 +2369,7 @@ function exec(tx) {
 	tx.executeSql(sql);
 }
 
-function consultaBanco() {
 
-	/*
-	 * pega a variavel global do banco
-	 */
-	if (db) {
 
-		db.transaction(function(tx) {
 
-			var sql = "select * from ranking";
-
-			tx.executeSql(sql, [], function(tx, resultado) {
-
-				for (i = 0; i < resultado.rows.length; i++) {
-					
-					//alert("User: " + resultado.rows.item(i).user + " Time: "	+ resultado.rows.item(i).time);
-				}
-
-				//alert("encontrados registros " + resultado.rows.length);
-
-			}, function(e) {
-
-				console.log("falha na consulta");
-			}, function(fin) {
-
-				console.log("final");
-			});
-		}, function(err) {
-
-			console.log("erros no primeiro ");
-		}, function(fn) {
-
-			console.log("final no primeiro");
-		});
-	}
-}
-
-function consultaRaking(func) {
-
-	/*
-	 * pega a variavel global do banco
-	 */
-	if (db) {
-
-		db.transaction(function(tx) {
-
-			var sql = "select * from ranking";
-			var html = "<li> NÃo há dados </li>";
-			tx.executeSql(sql, [], function(tx, resultado) {
-				html = "";
-				html += "<li> " +
-								"<table CELLSPACING=2 CELLPADDING=3>" +
-									"<tr>" +
-										"<td>"	+
-											"Usuário" + 
-										"</td>" + 
-										"<td>" +
-											"Tempo" +
-										"</td>" +
-									"</tr>" +
-								"</table>"
-							"</li>";
-				for (i = 0; i < resultado.rows.length; i++) {
-					html += "<li> " +
-								"<table CELLSPACING=2 CELLPADDING=3>" +
-									"<tr>" +
-										"<td>"	+
-											resultado.rows.item(i).user + 
-										"</td>" + 
-										"<td>" +
-											resultado.rows.item(i).time +
-										"</td>" +
-									"</tr>" +
-								"</table>"
-							"</li>";
-					//alert(html);
-				}
-
-				func(html);
-
-			}, function(e) {
-
-				console.log("falha na consulta");
-			}, function(fin) {
-
-				console.log("final");
-			});
-		}, function(err) {
-
-			console.log("erros no primeiro ");
-		}, function(fn) {
-
-			console.log("final no primeiro");
-		});
-	}
-}
-
-function err(e) {
-
-	console.log("transacao erro");
-	alert(e);
-}
-
-function finalli() {
-	console.log("transacao final");
-}
 
