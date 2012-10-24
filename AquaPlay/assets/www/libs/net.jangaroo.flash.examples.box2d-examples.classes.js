@@ -3,7 +3,7 @@ var j = 0;
 var tempo;
 var tempoJogo;
 var TEMPO_MAXIMO_JOGO = 120;
-var TEMPO_ESTOURA_BOLHA = 12;
+var TEMPO_ESTOURA_BOLHA = 6;
 var NUMBER_TELA = 0;
 var QUANT_CAIXAS = 1;
 var arrayCaixinhas = new Array();
@@ -108,7 +108,7 @@ joo.classLoader.prepare(
         ;
         return[
             "static public function limitFrame", function (maxFPS) {
-                var fTime = 10000 / maxFPS;
+                var fTime = 1000 / maxFPS;
                 while (Math.abs($$private.newT - $$private.oldT) < fTime) {
                     $$private.newT = flash.utils.getTimer();
                 }
@@ -402,8 +402,7 @@ joo.classLoader.prepare(
                 Main.novoteste.width = 300;
                 Main.novoteste.height = 30;
                 this.addChild(Main.novoteste);
-                Main.novoteste.mouseEnabled = false;
-								
+                Main.novoteste.mouseEnabled = false;								
 				
             },
             "public function update", function (e) {
@@ -464,13 +463,20 @@ joo.classLoader.prepare(
 				/*
 				* verifica se o usuário ganhou o jogo
 				*/
-				if(jogoEmExecucao == 1 && verificaVitoria() && user == "") {
+
+				if(jogoEmExecucao == 1 && verificaVitoria()) {
+					alert("aquI");
 					//faz o que se deve fazer quando ganha o jogo
 					tempoFinalPartida = (now - tempoJogo);
 					Main.m_currTest = null;
 					NUMBER_TELA = 4;
+
+					Main.m_currTest = null;
+					DentrCaixa = null;
+					DentrCaixa = new Array();
+
 				} 
-				
+
 				/*
 				* Método de verificar tempo do jogo, para determinar quando acabou
 				*/
@@ -580,7 +586,7 @@ joo.classLoader.prepare(
             "public var", {m_world:null},
             "public var", {m_bomb:null},
             "public var", {m_mouseJoint:null},
-            "public var", {m_velocityIterations:1},
+            "public var", {m_velocityIterations:10},
             "public var", {m_positionIterations:10},
             "public var", {m_timeStep:1.0 / 30.0},
             "public var", {m_physScale:30},
@@ -753,8 +759,9 @@ joo.classLoader.prepare(
                
             },
              "public function consultaRankingTop5", function () {  
-            
-             	db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
+				setupDB(); 
+             	//db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
+				alert(db);
 				if (db) {
 				//limparDB();
 					db.transaction(function(tx) {
@@ -808,14 +815,15 @@ joo.classLoader.prepare(
             joo.classLoader.init(Box2D.Dynamics.b2Body, Main, Math);
         },
             "public function TestSucesso", function () {
+				
                 this.super$2();
                 Main.m_aboutText.text = "O jogo acabou";
+
                 jogoEmExecucao = 0;
                 
 				//var time = tempoFinalPartida;
 				
-				var time = 124;
-                
+
                 var m_aboutTextFormat = new flash.text.TextFormat("Arial", 30, 0x00CCFF, true, false, false);
                 m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
                 Main.m_aboutText.defaultTextFormat = m_aboutTextFormat;
@@ -823,8 +831,9 @@ joo.classLoader.prepare(
                 Main.m_aboutText.y = 10;
                 Main.m_aboutText.width = 300;
                 Main.m_aboutText.height = 100;
-               
-                var btReiniciar = document.getElementById('reiniciar');
+                jogoEmExecucao = 0;
+                         
+				var btReiniciar = document.getElementById('reiniciar');
 				var btEsquerdo = document.getElementById('esquerdo');
 				var btDireito = document.getElementById('direito');
 				var btRanking = document.getElementById('ranking');
@@ -833,41 +842,73 @@ joo.classLoader.prepare(
 				btReiniciar.style.width = '100%';
 				btRanking.style.display = 'none';
 				btEsquerdo.style.display = 'none';
-				btDireito.style.display = 'none'; 
+				btDireito.style.display = 'none';
 				
-				if(jogoEmExecucao == 0 && user == ""){
-  					user = prompt('Digite seu Nome:','');
- 					alert("seu nome" + user);
- 					inserirDadosDB(); 
- 				}
-  				
-            },
-             "public function inserirDadosDB", function (user, time) {  
-            
-             	db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
-				if (db) {
-					    db.transaction(function (tx) {   
-					     
-					     sql2 = "insert into ranking (user, time) values (?, ?)";    
-					       
-					     tx.executeSql(sql2, [user, time]);
-					
-					    } , err, finalli);
-					
-					}
-				
-				  
-            },
-              "public function reiniciarJogo", function () {  
+
+				if ( user == "" ) {
+					do {
+						user = prompt('Qual o seu Nome:','');
+	 
+					} while (user == "" || user == "null") 
+	 
+					alert('Dados gravados ' + user + " Tempo : " + tempoFinalPartida);
+				 				
+ 				 inserirDadosDB(user, tempoFinalPartida); 
+				 controleBtReiniciar = 1;			
+				 user = "";
+				}				
+               
+            },  
+                "public function reiniciarJogo", function () {  
                  Main.m_currTest = null;
                  NUMBER_TELA = 1;
 				 Main.m_currTest = new Main.tests[NUMBER_TELA]();
             },
-            
         ];
     }, [], ["TestBed.Test", "Main", "Box2D.Common.Math.b2Vec2", "Box2D.Collision.Shapes.b2PolygonShape", "Box2D.Dynamics.b2FixtureDef", "Box2D.Dynamics.b2BodyDef", "Box2D.Dynamics.b2Body", "Box2D.Dynamics.Joints.b2RevoluteJointDef", "Math", "Box2D.Collision.Shapes.b2CircleShape", "Array"], "0.8.0", "0.8.1"
 );
 
+function inserirDadosDB(user, time) { 
+	setupDB(); 
+    if (db) {
+		//alert("aqui quase inserindo");
+         db.transaction(function (tx) {   
+          
+          sql2 = "insert into ranking (user, time) values (?, ?)";    
+            
+          tx.executeSql(sql2, [user, time]);
+     
+         } , err, finalli);
+     
+     }
+ }
+ 
+function limpaDadosDB() { 
+	setupDB(); 
+    if (db) {
+		//alert("aqui quase inserindo");
+         db.transaction(function (tx) {   
+          
+          sql2 = "delete from ranking";    
+            
+          tx.executeSql(sql2);
+     
+         } , err, finalli);
+     
+     }
+    }
+
+
+ /*function inserirDadosDB() {  
+	//alert(user + " " + tempoFinalPartida);
+     db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
+	if (db) {
+		db.transaction(function (tx) {   
+		sql2 = "insert into ranking (user, time) values (?, ?)";    
+		tx.executeSql(sql2, [user, time]);
+		} , err, finalli);
+	}
+}*/
 
 // class TestBed.TestPageStart
 joo.classLoader.prepare(
@@ -1137,7 +1178,7 @@ function verificaVitoria() {
 	var x1 = 1.6;
 	var y1 = 2.6;
 	
-	var x2 = 1.8;
+	var x2 = 3.4;
 	var y2 = 4.5;
 	
 	var x3 = 3.6;
@@ -1184,7 +1225,7 @@ function verificaVitoria() {
 
 function setupDB() {
 	db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
-
+	
 	if (db) {
 		console.log("passei");
 		db.transaction(exec, err, finalli);
@@ -1200,16 +1241,12 @@ function exec(tx) {
 	tx.executeSql(sql);
 }
 
-function limparDB(tx) {
+function err(e) {
 
-	console.log("limpar bd");
-
-	sql = "delete * from ranking";
-	
-	tx.executeSql(sql);
+	console.log("transação erro");
+	alert(e);
 }
 
-
-
-
-
+function finalli() {
+	console.log("transação final");
+}
