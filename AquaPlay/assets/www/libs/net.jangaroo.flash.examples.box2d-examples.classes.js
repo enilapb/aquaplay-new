@@ -3,9 +3,9 @@ var j = 0;
 var tempo;
 var tempoJogo;
 var TEMPO_MAXIMO_JOGO = 60;
-var TEMPO_ESTOURA_BOLHA = 5;
+var TEMPO_ESTOURA_BOLHA = 6;
 var NUMBER_TELA = 0;
-var QUANT_CAIXAS = 5;
+var QUANT_CAIXAS = 1;
 var arrayCaixinhas = new Array();
 var my_m_physScale;
 var posArray = 0;
@@ -505,11 +505,16 @@ joo.classLoader.prepare(
 				* verifica se o usuário ganhou o jogo
 				*/
 				if(jogoEmExecucao == 1 && verificaVitoria()) {
+				alert("chamou venceu");
 					//faz o que se deve fazer quando ganha o jogo
 					tempoFinalPartida = (now - tempoJogo);
 					NUMBER_TELA = 4;
 					//alert("vc ganhou, seu time foi: " + tempoFinalPartida);
 				} 
+				
+				//if(verificaVitoria()) {
+				//	alert("deu certo");
+				//}
 				
 				/*
 				* Método de verificar tempo do jogo, para determinar quando acabou
@@ -1218,7 +1223,7 @@ joo.classLoader.prepare(
                     var boxDef = new Box2D.Collision.Shapes.b2PolygonShape();
                     fd = new Box2D.Dynamics.b2FixtureDef();
                     fd.shape = boxDef;
-                    fd.density = 2.5;
+                    fd.density = 2.1;
                     fd.friction = 0.3;
                     fd.restitution = 0.1;
 					
@@ -2330,14 +2335,14 @@ joo.classLoader.prepare(
 
 function verificaVitoria() {
 	var quantCaixa = 0;
-	var x1 = 3.2;
-	var y1 = 6;
+	var x1 = 1.6;
+	var y1 = 2.6;
 	
-	var x2 = 4.5
-	var y2 = 7.6;
+	var x2 = 1.8;
+	var y2 = 4.5;
 	
-	var x3 = 6;
-	var y3 = 6;
+	var x3 = 3.6;
+	var y3 = 2.6;
 	
 	for (h = 0; h < arrayCaixinhas.length; h++) {
 	
@@ -2345,6 +2350,8 @@ function verificaVitoria() {
 		
 		var y = element.GetPosition().y;
 		var x = element.GetPosition().x;
+		//if(x > 3 && x < 3.6)	
+		//	alert(x);
 		
 		/*
 		* verifica se a caixa pequena entrou na grande
