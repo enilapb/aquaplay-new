@@ -1236,7 +1236,7 @@ joo.classLoader.prepare(
 					/*
 					* faz os blocos nascerem em baixo
 					*/
-					bodyDef.position.Set(1, 10);
+					bodyDef.position.Set(Math.random() * 2+3, Math.random() * 6+5);
                     bodyDef.angle = Math.random() * Math.PI;
                     body = this.m_world.CreateBody(bodyDef);
                     body.CreateFixture(fd);
