@@ -595,11 +595,13 @@ joo.classLoader.prepare(
                 //PAREDE HORIZONTAL TOP
 				wallBd.position.Set(2.5, -3.2);
                // wallBd.position.Set(280 / this.m_physScale / 2, -95 / this.m_physScale);
-                wall.SetAsBox(280 / this.m_physScale / 2, 100 / this.m_physScale);
+			   wall.SetAsBox(6, 3.4);
+               // wall.SetAsBox(280 / this.m_physScale / 2, 100 / this.m_physScale);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
 
                 //PAREDE HORIZONTAL BOTTON
+						//comprimento e altura
 				wallBd.position.Set(2.5, 13.2);
                 //wallBd.position.Set(280 / this.m_physScale / 2, (300 + 95) / this.m_physScale);
                 wallB = this.m_world.CreateBody(wallBd);
