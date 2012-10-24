@@ -2,10 +2,10 @@ var refBolhas;
 var j = 0;
 var tempo;
 var tempoJogo;
-var TEMPO_MAXIMO_JOGO = 60;
-var TEMPO_ESTOURA_BOLHA = 6;
+var TEMPO_MAXIMO_JOGO = 120;
+var TEMPO_ESTOURA_BOLHA = 12;
 var NUMBER_TELA = 0;
-var QUANT_CAIXAS = 3;
+var QUANT_CAIXAS = 1;
 var arrayCaixinhas = new Array();
 var my_m_physScale;
 var posArray = 0;
@@ -14,7 +14,7 @@ var tempoFinalPartida = 0;
 var db;
 var controleBtReiniciar = 0;
 var jogoEmExecucao = 0;
-
+var user = "";
 // class CanvasTest
 joo.classLoader.prepare("package",
     "public class CanvasTest", 1, function ($$private) {
@@ -108,7 +108,7 @@ joo.classLoader.prepare(
         ;
         return[
             "static public function limitFrame", function (maxFPS) {
-                var fTime = 1000 / maxFPS;
+                var fTime = 10000 / maxFPS;
                 while (Math.abs($$private.newT - $$private.oldT) < fTime) {
                     $$private.newT = flash.utils.getTimer();
                 }
@@ -464,17 +464,12 @@ joo.classLoader.prepare(
 				/*
 				* verifica se o usuário ganhou o jogo
 				*/
-				if(jogoEmExecucao == 1 && verificaVitoria()) {
-				alert("chamou venceu");
+				if(jogoEmExecucao == 1 && verificaVitoria() && user == "") {
 					//faz o que se deve fazer quando ganha o jogo
 					tempoFinalPartida = (now - tempoJogo);
+					Main.m_currTest = null;
 					NUMBER_TELA = 4;
-					//alert("vc ganhou, seu time foi: " + tempoFinalPartida);
 				} 
-				
-				//if(verificaVitoria()) {
-				//	alert("deu certo");
-				//}
 				
 				/*
 				* Método de verificar tempo do jogo, para determinar quando acabou
@@ -543,9 +538,10 @@ joo.classLoader.prepare(
                 var wallB;
 
                 //PAREDE VERTICAL LEFT
-									//espessura //altura
+				//espessura //altura
 				wallBd.position.Set(-3.19, 4);
                 //wallBd.position.Set(-95 / this.m_physScale, 360 / this.m_physScale / 2);
+                
 				wall.SetAsBox(3.4, 6);
                // wall.SetAsBox(100 / this.m_physScale, 360 / this.m_physScale / 2);
                 wallB = this.m_world.CreateBody(wallBd);
@@ -566,7 +562,7 @@ joo.classLoader.prepare(
                 wallB.CreateFixture2(wall, 0.0);
 
                 //PAREDE HORIZONTAL BOTTON
-						//comprimento e altura
+				//comprimento e altura
 				wallBd.position.Set(2.5, 13.2);
                 //wallBd.position.Set(280 / this.m_physScale / 2, (300 + 95) / this.m_physScale);
                 wallB = this.m_world.CreateBody(wallBd);
@@ -584,7 +580,7 @@ joo.classLoader.prepare(
             "public var", {m_world:null},
             "public var", {m_bomb:null},
             "public var", {m_mouseJoint:null},
-            "public var", {m_velocityIterations:10},
+            "public var", {m_velocityIterations:1},
             "public var", {m_positionIterations:10},
             "public var", {m_timeStep:1.0 / 30.0},
             "public var", {m_physScale:30},
@@ -760,6 +756,7 @@ joo.classLoader.prepare(
             
              	db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
 				if (db) {
+				//limparDB();
 					db.transaction(function(tx) {
 					var html;
 				   	var sql = "select * from ranking";
@@ -815,8 +812,9 @@ joo.classLoader.prepare(
                 Main.m_aboutText.text = "O jogo acabou";
                 jogoEmExecucao = 0;
                 
-                var user = "";
-				var time = tempoFinalPartida;
+				//var time = tempoFinalPartida;
+				
+				var time = 124;
                 
                 var m_aboutTextFormat = new flash.text.TextFormat("Arial", 30, 0x00CCFF, true, false, false);
                 m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
@@ -837,17 +835,14 @@ joo.classLoader.prepare(
 				btEsquerdo.style.display = 'none';
 				btDireito.style.display = 'none'; 
 				
-				do {
-  					user = prompt('Qual o seu Nome:','');
- 
- 				} while (user == "" || user == "null") 
- 
- 				alert('Dados ' + user + ', Seja bem vindo!');
- 				
- 				inserirDadosDB();  
-               
+				if(jogoEmExecucao == 0 && user == ""){
+  					user = prompt('Digite seu Nome:','');
+ 					alert("seu nome" + user);
+ 					inserirDadosDB(); 
+ 				}
+  				
             },
-             "public function inserirDadosDB", function () {  
+             "public function inserirDadosDB", function (user, time) {  
             
              	db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
 				if (db) {
@@ -886,7 +881,15 @@ joo.classLoader.prepare(
                 this.super$2();
                 Main.novoteste.text = "";
                 jogoEmExecucao = 0;
-                Main.m_aboutText.text = "Bem vindo ao Jogo";
+                
+                var m_aboutTextFormat = new flash.text.TextFormat("Arial", 30, 0x00CCFF, true, false, false);
+                m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
+                Main.m_aboutText.defaultTextFormat = m_aboutTextFormat;
+                Main.m_aboutText.x = 1;
+                Main.m_aboutText.y = 200;
+                Main.m_aboutText.width = 300;
+                Main.m_aboutText.height = 100;
+                Main.m_aboutText.text = "AquaPlay Mobile";
          
 				var btReiniciar = document.getElementById('reiniciar');
 				var btEsquerdo = document.getElementById('esquerdo');
@@ -899,13 +902,7 @@ joo.classLoader.prepare(
 				btEsquerdo.style.display = 'none';
 				btDireito.style.display = 'none';               
                 
-                var m_aboutTextFormat = new flash.text.TextFormat("Arial", 30, 0x00CCFF, true, false, false);
-                m_aboutTextFormat.align = flash.text.TextFormatAlign.RIGHT;
-                Main.m_aboutText.defaultTextFormat = m_aboutTextFormat;
-                Main.m_aboutText.x = -50;
-                Main.m_aboutText.y = 200;
-                Main.m_aboutText.width = 300;
-                Main.m_aboutText.height = 100;
+                
                 
             },
             
@@ -951,9 +948,9 @@ joo.classLoader.prepare(
 				my_m_physScale = this.m_physScale;
 				
                 bc.normal.Set(0, -1);
-                bc.offset = -100 / this.m_physScale;
+                bc.offset = -100/this.m_physScale;
                 bc.density = 2.0;
-                bc.linearDrag = 5;
+                bc.linearDrag = 8;
                 bc.angularDrag = 2;
                 var ground = this.m_world.GetGroundBody();
                 var i;
@@ -981,7 +978,9 @@ joo.classLoader.prepare(
 					/*
 					* faz os blocos nascerem em baixo
 					*/
+					
 					bodyDef.position.Set(Math.random() * 2+3, Math.random() * 6+5);
+					//bodyDef.position.Set(2, 3);
                     bodyDef.angle = Math.random() * Math.PI;
                     body = this.m_world.CreateBody(bodyDef);
                     body.CreateFixture(fd);
@@ -1028,7 +1027,7 @@ joo.classLoader.prepare(
                 }
                 this.m_world.AddController(this.m_controller$2);
 
-                Main.m_aboutText.text = "Aquaplay Mobile";
+                Main.m_aboutText.text = "";
                 
                 
                 var btReiniciar = document.getElementById('reiniciar');
@@ -1068,7 +1067,7 @@ joo.classLoader.prepare(
 
                     var bodyDef = new Box2D.Dynamics.b2BodyDef();
                     bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
-                    var cd = new Box2D.Collision.Shapes.b2CircleShape((Math.random() * 10 + 5) / this.m_physScale);
+                    var cd = new Box2D.Collision.Shapes.b2CircleShape((Math.random() * 15 + 5) / this.m_physScale);
 
                     var fixtureDef = new Box2D.Dynamics.b2FixtureDef();
                     fixtureDef.shape = cd;
@@ -1076,8 +1075,8 @@ joo.classLoader.prepare(
                     fixtureDef.density = 0.5;
                     fixtureDef.restitution = 0.1;
 
-                    bodyDef.position.Set((Math.random() * 40 + 15) / this.m_physScale, 280 / this.m_physScale);
-                    //bodyDef.angle = Math.random() * Math.PI;
+                    bodyDef.position.Set((Math.random() * 40 + 20) / this.m_physScale, 280 / this.m_physScale);
+                    bodyDef.angle = Math.random() * Math.PI;
                     var body = this.m_world.CreateBody(bodyDef);
                     body.CreateFixture(fixtureDef);
                     this.m_controller$2.AddBody(body);
@@ -1197,6 +1196,15 @@ function exec(tx) {
 	console.log("transacao rolando");
 
 	sql = "create table if not exists ranking (id integer Primary Key autoincrement, user varchar(100), time varchar(100))";
+	
+	tx.executeSql(sql);
+}
+
+function limparDB(tx) {
+
+	console.log("limpar bd");
+
+	sql = "delete * from ranking";
 	
 	tx.executeSql(sql);
 }
