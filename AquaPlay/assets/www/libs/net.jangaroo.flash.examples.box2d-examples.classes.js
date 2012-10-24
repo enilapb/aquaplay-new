@@ -761,18 +761,19 @@ joo.classLoader.prepare(
              "public function consultaRankingTop5", function () {  
 				setupDB(); 
              	//db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
-				alert(db);
+				
 				if (db) {
 				//limparDB();
 					db.transaction(function(tx) {
 					var html;
-				   	var sql = "select * from ranking";
+				   	var sql = "select * from ranking order by time asc limit 0, 5";
 				   	tx.executeSql(sql, [], function(tx, resultado) {
 				    
 				    	html = " O Maiores vencedores - TOP\n\n";
 				    	html += " Nome  |  Tempo  \n\n";
-				   
-					    for (i = 0; i < 5; i++) {
+						
+					    for (i = 0; i < resultado.rows.length; i++) {
+							
 					    	html += " " +       
 					       	resultado.rows.item(i).user +   "  |   " +  
 					       	resultado.rows.item(i).time +   " \n\n";
