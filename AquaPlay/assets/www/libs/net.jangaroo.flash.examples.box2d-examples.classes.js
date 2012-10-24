@@ -5,7 +5,7 @@ var tempoJogo;
 var TEMPO_MAXIMO_JOGO = 60;
 var TEMPO_ESTOURA_BOLHA = 5;
 var NUMBER_TELA = 0;
-var QUANT_CAIXAS = 1;
+var QUANT_CAIXAS = 5;
 var arrayCaixinhas = new Array();
 var my_m_physScale;
 var posArray = 0;
@@ -578,24 +578,30 @@ joo.classLoader.prepare(
                 var wallB;
 
                 //PAREDE VERTICAL LEFT
-                wallBd.position.Set(-95 / this.m_physScale, 360 / this.m_physScale / 2);
-                wall.SetAsBox(100 / this.m_physScale, 360 / this.m_physScale / 2);
+									//espessura //altura
+				wallBd.position.Set(-3.19, 4);
+                //wallBd.position.Set(-95 / this.m_physScale, 360 / this.m_physScale / 2);
+				wall.SetAsBox(3.4, 6);
+               // wall.SetAsBox(100 / this.m_physScale, 360 / this.m_physScale / 2);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
 
                 //PAREDE VERTICAL RIGHT
-                wallBd.position.Set((213 + 95) / this.m_physScale, 360 / this.m_physScale / 2);
+				wallBd.position.Set(10.3, 4);
+               // wallBd.position.Set((213 + 95) / this.m_physScale, 360 / this.m_physScale / 2);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
 
                 //PAREDE HORIZONTAL TOP
-                wallBd.position.Set(280 / this.m_physScale / 2, -95 / this.m_physScale);
+				wallBd.position.Set(2.5, -3.2);
+               // wallBd.position.Set(280 / this.m_physScale / 2, -95 / this.m_physScale);
                 wall.SetAsBox(280 / this.m_physScale / 2, 100 / this.m_physScale);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
 
                 //PAREDE HORIZONTAL BOTTON
-                wallBd.position.Set(280 / this.m_physScale / 2, (300 + 95) / this.m_physScale);
+				wallBd.position.Set(2.5, 13.2);
+                //wallBd.position.Set(280 / this.m_physScale / 2, (300 + 95) / this.m_physScale);
                 wallB = this.m_world.CreateBody(wallBd);
                 wallB.CreateFixture2(wall, 0.0);
             },
