@@ -15,6 +15,8 @@ var db;
 var controleBtReiniciar = 0;
 var jogoEmExecucao = 0;
 var user = "";
+var latitude = "";
+var longitude = "";
 // class CanvasTest
 joo.classLoader.prepare("package",
     "public class CanvasTest", 1, function ($$private) {
@@ -853,7 +855,7 @@ joo.classLoader.prepare(
 					} while (user == "" || user == "null") 
 	 
 					alert('Dados gravados ' + user + " Tempo : " + tempoFinalPartida);
-				 				
+				 locGPS();				
  				 inserirDadosDB(user, tempoFinalPartida); 
 				 controleBtReiniciar = 1;			
 				 user = "";
@@ -875,9 +877,9 @@ function inserirDadosDB(user, time) {
 		//alert("aqui quase inserindo");
          db.transaction(function (tx) {   
           
-          sql2 = "insert into ranking (user, time) values (?, ?)";    
+          sql2 = "insert into ranking (user, time, latitude, longitude) values (?, ?, ?, ?)";    
             
-          tx.executeSql(sql2, [user, time]);
+          tx.executeSql(sql2, [user, time, latitude, longitude]);
      
          } , err, finalli);
      
@@ -1224,6 +1226,15 @@ function verificaVitoria() {
 	}
 }
 
+function locGPS() {
+	document.addEventListener("deviceready", function() {
+		navigator.geolocation.getCurrentPosition(function(position){
+			latitude = position.coords.latitude;
+			longitude = position.coords.longitude;
+		}, logErro);
+	});
+});
+
 function setupDB() {
 	db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
 	
@@ -1237,7 +1248,7 @@ function exec(tx) {
 
 	console.log("transacao rolando");
 
-	sql = "create table if not exists ranking (id integer Primary Key autoincrement, user varchar(100), time varchar(100))";
+	sql = "create table if not exists ranking (id integer Primary Key autoincrement, user varchar(100), time varchar(100), latitude varchar(100), longitude varchar(100))";
 	
 	tx.executeSql(sql);
 }
@@ -1246,6 +1257,10 @@ function err(e) {
 
 	console.log("transação erro");
 	alert(e);
+}
+
+function logErro(err) {
+	log("Erro: [ " + err.code + " ] " + err.message);
 }
 
 function finalli() {
