@@ -1,11 +1,12 @@
 var refBolhas;
+var id = 0;
 var j = 0;
 var tempo;
 var tempoJogo;
 var TEMPO_MAXIMO_JOGO = 120;
 var TEMPO_ESTOURA_BOLHA = 6;
 var NUMBER_TELA = 0;
-var QUANT_CAIXAS = 1;
+var QUANT_CAIXAS = 5;
 var arrayCaixinhas = new Array();
 var my_m_physScale;
 var posArray = 0;
@@ -78,6 +79,7 @@ joo.classLoader.prepare(
                 this.avgCount$6--;
                 this.oldT$6 = flash.utils.getTimer();
             //    this.textBox3$6.text = Math.round(flash.system.System.totalMemory / (1024 * 1024)) + " MB used";
+            aceleracao();	
             },
             "public function updatePhys", function (oldT2) {
                 var newT = flash.utils.getTimer();
@@ -390,8 +392,10 @@ joo.classLoader.prepare(
                 this.addChild(Main.m_aboutText);
                 instructions_text.mouseEnabled = false;
                 Main.m_aboutText.mouseEnabled = false;
-                
-                
+                //limparDB();
+                //limparTable();
+               // alert("passouaki");
+               	
                 /*TESTE*/
                 Main.novoteste = new flash.text.TextField();
                 
@@ -404,7 +408,9 @@ joo.classLoader.prepare(
                 Main.novoteste.width = 300;
                 Main.novoteste.height = 30;
                 this.addChild(Main.novoteste);
-                Main.novoteste.mouseEnabled = false;								
+                Main.novoteste.mouseEnabled = false;
+                
+                							
 				
             },
             "public function update", function (e) {
@@ -467,7 +473,6 @@ joo.classLoader.prepare(
 				*/
 
 				if(jogoEmExecucao == 1 && verificaVitoria()) {
-					alert("aquI");
 					//faz o que se deve fazer quando ganha o jogo
 					tempoFinalPartida = (now - tempoJogo);
 					Main.m_currTest = null;
@@ -494,8 +499,6 @@ joo.classLoader.prepare(
 						//alert("acabou o jogo, tempo acabou");
 					}
 				}
-			
-				
             },
             
             "static public var", {m_fpsCounter:function () {
@@ -543,6 +546,11 @@ joo.classLoader.prepare(
                 this.m_world.SetDebugDraw(dbgDraw);
                 var wall = new Box2D.Collision.Shapes.b2PolygonShape();
                 var wallBd = new Box2D.Dynamics.b2BodyDef();
+                //BodyDef wallBd = new BodyDef();
+                //wallBd.type = BodyType.STATIC;
+    			
+ 
+                wallBd.fixedRotation = true;
                 var wallB;
 
                 //PAREDE VERTICAL LEFT
@@ -746,6 +754,7 @@ joo.classLoader.prepare(
                 Main.m_aboutText.height = 100;
                
                 this.consultaRankingTop5();
+                //limpaDadosDB();
                 
                 var btReiniciar = document.getElementById('reiniciar');
 				var btEsquerdo = document.getElementById('esquerdo');
@@ -763,22 +772,25 @@ joo.classLoader.prepare(
              "public function consultaRankingTop5", function () {  
 				setupDB(); 
              	//db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
-				
+				//alert(db);
 				if (db) {
-				//limparDB();
+								
 					db.transaction(function(tx) {
 					var html;
+				   	
 				   	var sql = "select * from ranking order by time asc limit 0, 5";
 				   	tx.executeSql(sql, [], function(tx, resultado) {
 				    
 				    	html = " O Maiores vencedores - TOP\n\n";
-				    	html += " Nome  |  Tempo  \n\n";
-						
+				    	html += " Nome  |  Tempo | Latitude | Longitude \n\n";
+				   
 					    for (i = 0; i < resultado.rows.length; i++) {
 							
 					    	html += " " +       
 					       	resultado.rows.item(i).user +   "  |   " +  
-					       	resultado.rows.item(i).time +   " \n\n";
+					       	resultado.rows.item(i).time +   "  |   " +  
+				       		resultado.rows.item(i).latitude + "  |   " +  
+				       		resultado.rows.item(i).longitude +   "\n\n";
 					    }
 				      
 				      Main.novoteste.text = html;
@@ -824,7 +836,7 @@ joo.classLoader.prepare(
 
                 jogoEmExecucao = 0;
                 
-				//var time = tempoFinalPartida;
+				var time = tempoFinalPartida;
 				
 
                 var m_aboutTextFormat = new flash.text.TextFormat("Arial", 30, 0x00CCFF, true, false, false);
@@ -847,16 +859,17 @@ joo.classLoader.prepare(
 				btEsquerdo.style.display = 'none';
 				btDireito.style.display = 'none';
 				
-
+				
 				if ( user == "" ) {
 					do {
 						user = prompt('Qual o seu Nome:','');
 	 
 					} while (user == "" || user == "null") 
 	 
-					alert('Dados gravados ' + user + " Tempo : " + tempoFinalPartida);
-				 locGPS();				
+					//alert('Dados gravados ' + user + " Tempo : " + tempoFinalPartida);
+				 locGPS();
  				 inserirDadosDB(user, tempoFinalPartida); 
+ 				 //alert("lat " + latitude + "long " + longitude);
 				 controleBtReiniciar = 1;			
 				 user = "";
 				}				
@@ -875,6 +888,7 @@ function inserirDadosDB(user, time) {
 	setupDB(); 
     if (db) {
 		//alert("aqui quase inserindo");
+		//alert("lat " + latitude + "long " + longitude);
          db.transaction(function (tx) {   
           
           sql2 = "insert into ranking (user, time, latitude, longitude) values (?, ?, ?, ?)";    
@@ -900,18 +914,6 @@ function limpaDadosDB() {
      
      }
     }
-
-
- /*function inserirDadosDB() {  
-	//alert(user + " " + tempoFinalPartida);
-     db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
-	if (db) {
-		db.transaction(function (tx) {   
-		sql2 = "insert into ranking (user, time) values (?, ?)";    
-		tx.executeSql(sql2, [user, time]);
-		} , err, finalli);
-	}
-}*/
 
 // class TestBed.TestPageStart
 joo.classLoader.prepare(
@@ -1002,6 +1004,7 @@ joo.classLoader.prepare(
                 var body;
                 var fd;
 
+				
                 //criando quadrados
                 for (i = 0; i < QUANT_CAIXAS; i++) {
                     var bodyDef = new Box2D.Dynamics.b2BodyDef();
@@ -1226,14 +1229,39 @@ function verificaVitoria() {
 	}
 }
 
+function aceleracao(){
+	    if(id == 0){
+	        id = navigator.accelerometer.watchAcceleration(onSuccess, onError);
+	    } else {
+	    	navigator.accelerometer.cleanWatch(id);
+	    	id = 0;
+	    }
+}
+
+function onSuccess(acceleration) {
+	var x = acceleration.x;
+	var y = acceleration.y;
+	
+	if((x > -0,5 && x < 9,2 ) &&  (y > 0,3 && y < 9,8)){
+	alert(x + '\n\n ' + y);
+	}
+   
+};
+
+function onError() {
+    alert('onError!');
+};
+
+
 function locGPS() {
-	document.addEventListener("deviceready", function() {
+	//document.addEventListener("deviceready", function() {
 		navigator.geolocation.getCurrentPosition(function(position){
 			latitude = position.coords.latitude;
 			longitude = position.coords.longitude;
+			//alert("lat " + latitude + "long " + longitude);
 		}, logErro);
-	});
-});
+	//});
+}
 
 function setupDB() {
 	db = window.openDatabase("bd1", "1.0", "myBank", (1024 * 1024) * 5);
@@ -1249,6 +1277,22 @@ function exec(tx) {
 	console.log("transacao rolando");
 
 	sql = "create table if not exists ranking (id integer Primary Key autoincrement, user varchar(100), time varchar(100), latitude varchar(100), longitude varchar(100))";
+	tx.executeSql(sql);
+}
+
+function limparTable(tx) {
+	
+	console.log("limpa table");
+
+	sql = "drop table ranking";
+	
+	tx.executeSql(sql);
+}
+function limparDB(tx) {
+
+	console.log("limpar bd");
+
+	sql = "delete * from ranking";
 	
 	tx.executeSql(sql);
 }
@@ -1256,7 +1300,16 @@ function exec(tx) {
 function err(e) {
 
 	console.log("transação erro");
-	alert(e);
+	//alert(e);
+}
+
+function selectDB(tx) {
+
+	console.log("tudo bd");
+
+	sql = "select * from ranking";
+	
+	tx.executeSql(sql);
 }
 
 function logErro(err) {
