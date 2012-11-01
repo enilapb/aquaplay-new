@@ -18,6 +18,10 @@ var jogoEmExecucao = 0;
 var user = "";
 var latitude = "";
 var longitude = "";
+
+var acelX;
+var acelY;
+var acelZ;
 // class CanvasTest
 joo.classLoader.prepare("package",
     "public class CanvasTest", 1, function ($$private) {
@@ -79,7 +83,7 @@ joo.classLoader.prepare(
                 this.avgCount$6--;
                 this.oldT$6 = flash.utils.getTimer();
             //    this.textBox3$6.text = Math.round(flash.system.System.totalMemory / (1024 * 1024)) + " MB used";
-            aceleracao();	
+	
             },
             "public function updatePhys", function (oldT2) {
                 var newT = flash.utils.getTimer();
@@ -410,6 +414,7 @@ joo.classLoader.prepare(
                 this.addChild(Main.novoteste);
                 Main.novoteste.mouseEnabled = false;
                 
+            
                 							
 				
             },
@@ -498,6 +503,8 @@ joo.classLoader.prepare(
 						NUMBER_TELA = 2;
 						//alert("acabou o jogo, tempo acabou");
 					}
+                	acelaracao();
+                
 				}
             },
             
@@ -949,7 +956,6 @@ joo.classLoader.prepare(
 				btDireito.style.display = 'none';               
                 
                 
-                
             },
             
             "public function reiniciarJogo", function () {  
@@ -1229,21 +1235,27 @@ function verificaVitoria() {
 	}
 }
 
-function aceleracao(){
-	    if(id == 0){
-	        id = navigator.accelerometer.watchAcceleration(onSuccess, onError);
-	    } else {
-	    	navigator.accelerometer.cleanWatch(id);
-	    	id = 0;
-	    }
-}
+function acelaracao(){
+//document.addEventListener("deviceready", function() {
+ 	navigator.accelerometer.watchAcceleration(onSuccess, onError, {frequency:1000});
+//});
 
+
+}
 function onSuccess(acceleration) {
+	var xInicial = -0.8 -5;
+	var yInicial = 9;
+	
+	var xFinal = -10;
+	var yFinal = 0.5;
+
 	var x = acceleration.x;
 	var y = acceleration.y;
-	
-	if((x > -0,5 && x < 9,2 ) &&  (y > 0,3 && y < 9,8)){
-	alert(x + '\n\n ' + y);
+
+	if(x <= xInicial && x >= xFinal){
+		Main.m_currTest = null;
+		NUMBER_TELA = 1;
+
 	}
    
 };
@@ -1254,13 +1266,11 @@ function onError() {
 
 
 function locGPS() {
-	//document.addEventListener("deviceready", function() {
 		navigator.geolocation.getCurrentPosition(function(position){
 			latitude = position.coords.latitude;
 			longitude = position.coords.longitude;
 			//alert("lat " + latitude + "long " + longitude);
 		}, logErro);
-	//});
 }
 
 function setupDB() {
